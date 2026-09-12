@@ -214,8 +214,8 @@
     <select id="backSelect"></select>
   </div>
 
-  <!-- 4. Exact Hardware Details -->
-  <div class="section-header"><i class="fa-solid fa-screwdriver-wrench"></i> 4. Hardware Details</div>
+  <!-- 4. Exact Hardware & Labour Details -->
+  <div class="section-header"><i class="fa-solid fa-screwdriver-wrench"></i> 4. Hardware & Labour Details</div>
   <div class="dim-row">
     <div class="input-box">
       <label>HINGES / KABZE (PCS)</label>
@@ -247,6 +247,7 @@
     <div class="res-row"><span>Inner Structure Cost:</span><span id="carcassCostText">₹0</span></div>
     <div class="res-row"><span>Shutters / Doors Cost:</span><span id="doorCostText">₹0</span></div>
     <div class="res-row"><span>Back Ply Cost:</span><span id="backCostText">₹0</span></div>
+    <div class="res-row" style="color:#f5ebe0; font-weight:700;"><span>Labour Charges (@ ₹<span id="labourRateText">300</span>/Sq.Ft):</span><span id="labourCostText">₹0</span></div>
 
     <!-- Hardware Breakdown -->
     <div class="res-row" style="color:var(--accent); font-weight:700; margin-top:8px;"><span>Hardware Breakdown:</span><span id="hwTotalText">₹0</span></div>
@@ -282,7 +283,7 @@
 
     <!-- HARDWARE SECTION -->
     <div style="border-bottom:1px solid #e0cdbc; padding-bottom:12px; margin-bottom:12px;">
-      <h4 style="margin:0 0 8px 0; color:var(--accent);"><i class="fa-solid fa-wrench"></i> Hardware Rates Setup</h4>
+      <h4 style="margin:0 0 8px 0; color:var(--accent);"><i class="fa-solid fa-wrench"></i> Hardware & Labour Rates Setup</h4>
       <div id="adminForm"></div>
     </div>
 
@@ -329,9 +330,10 @@
     doors: { '19mm Pine Blockboard': 130, '18mm HDMR Door': 120, '18mm Commercial Ply': 110 },
     backing: { '6mm Commercial Back Ply': 30, '6mm Marine Back Ply': 45, '8mm HDMR Backing': 50 },
     
+    labourRate: 300,       
     hingeRate: 250,        
-    lockRate: 300,         
-    adhesiveRate: 600,     
+    lockRate: 300,          
+    adhesiveRate: 600,      
     edgeBandingRate: 300,  
     extraHardwareFixed: 1000,
     extraDrawerRate: 800,
@@ -339,6 +341,11 @@
   };
 
   let backend = JSON.parse(localStorage.getItem('cupboard_v9_backend')) || defaultBackend;
+  
+  // Force update to 300 and 600
+  backend.labourRate = 300;
+  backend.adhesiveRate = 600;
+
   let lastEstimate = null;
 
   function populateDropdowns() {
@@ -384,6 +391,8 @@
     let extraFramesWastage = (h * w) * 0.12; 
     let totalCarcassSqft = outerSides + outerTopBottom + innerPartitionsArea + totalShelvesArea + extraFramesWastage;
 
+    let labourCost = frontSqft * backend.labourRate;
+
     let hingeCost = numHinges * backend.hingeRate;
     let lockCost = numLocks * backend.lockRate;
 
@@ -411,7 +420,7 @@
     let extraDrawers = drawers > 3 ? (drawers - 3) : 0;
     let drawerTotalCost = extraDrawers * backend.extraDrawerRate;
 
-    let grandTotal = carcassTotalCost + doorTotalCost + backTotalCost + totalHardwareCost + drawerTotalCost;
+    let grandTotal = carcassTotalCost + doorTotalCost + backTotalCost + labourCost + totalHardwareCost + drawerTotalCost;
 
     document.getElementById('sqftText').innerText = `${frontSqft.toFixed(1)} Sq. Ft.`;
     document.getElementById('singleShelfText').innerText = `${shelfLength.toFixed(1)}ft x ${d}ft (${singleShelfSqft.toFixed(1)} Sq.Ft)`;
@@ -421,6 +430,9 @@
     document.getElementById('carcassCostText').innerText = `₹${Math.round(carcassTotalCost)}`;
     document.getElementById('doorCostText').innerText = `₹${Math.round(doorTotalCost)}`;
     document.getElementById('backCostText').innerText = `₹${Math.round(backTotalCost)}`;
+
+    document.getElementById('labourRateText').innerText = backend.labourRate;
+    document.getElementById('labourCostText').innerText = `₹${Math.round(labourCost)}`;
 
     document.getElementById('hwTotalText').innerText = `₹${Math.round(totalHardwareCost)}`;
     document.getElementById('hingeQtyText').innerText = numHinges;
@@ -443,7 +455,7 @@
 
     document.getElementById('resultCard').style.display = 'block';
 
-    lastEstimate = { h, w, d, frontSqft, totalCarcassSqft, numHinges, hingeCost, numLocks, lockCost, fevicolKg, fevicolCost, totalHardwareCost, grandTotal };
+    lastEstimate = { h, w, d, frontSqft, totalCarcassSqft, labourCost, numHinges, hingeCost, numLocks, lockCost, fevicolKg, fevicolCost, totalHardwareCost, grandTotal };
   }
 
   function shareWhatsApp() {
@@ -457,11 +469,12 @@
       `📏 *Size:* ${lastEstimate.h}ft x ${lastEstimate.w}ft (Depth: ${lastEstimate.d}ft)%0A` +
       `📐 *Front Area:* ${lastEstimate.frontSqft.toFixed(1)} Sq.Ft%0A` +
       `🪵 *Carcass Material:* ~${Math.round(lastEstimate.totalCarcassSqft)} Sq.Ft%0A` +
+      `🔨 *Labour Charge:* ₹${Math.round(lastEstimate.labourCost)} (@₹${backend.labourRate}/sqft)%0A` +
       `----------------------------%0A` +
       `🔧 *Hardware Breakdown:* ₹${lastEstimate.totalHardwareCost}%0A` +
       `• Hinges/Kabze (${lastEstimate.numHinges} Pcs): ₹${lastEstimate.hingeCost}%0A` +
       `• Locks (${lastEstimate.numLocks} Pcs): ₹${lastEstimate.lockCost}%0A` +
-      `• Adhesive (${lastEstimate.fevicolKg} Kg): ₹${lastEstimate.fevicolCost}%0A` +
+      `• Adhesive (${lastEstimate.fevicolKg} Kg @ ₹${backend.adhesiveRate}): ₹${lastEstimate.fevicolCost}%0A` +
       `• Edge Banding & Extra Fittings Included%0A` +
       `----------------------------%0A` +
       `💰 *Estimated Total:* ₹${Math.round(lastEstimate.grandTotal)}%0A%0A` +
@@ -502,6 +515,7 @@
     document.getElementById('materialRatesForm').innerHTML = matHtml;
 
     let html = '';
+    html += `<div class="admin-group"><label>Labour Charge Rate (Per Sq.Ft)</label><input type="number" id="hr_labour" value="${backend.labourRate}"></div>`;
     html += `<div class="admin-group"><label>Hinge/Kabza Rate (Per Pc)</label><input type="number" id="hr_hinge" value="${backend.hingeRate}"></div>`;
     html += `<div class="admin-group"><label>Lock Rate (Per Pc)</label><input type="number" id="hr_lock" value="${backend.lockRate}"></div>`;
     html += `<div class="admin-group"><label>Adhesive Rate (Per Kg)</label><input type="number" id="hr_adh" value="${backend.adhesiveRate}"></div>`;
@@ -553,6 +567,7 @@
       }
     });
 
+    backend.labourRate = parseFloat(document.getElementById('hr_labour').value) || 0;
     backend.hingeRate = parseFloat(document.getElementById('hr_hinge').value) || 0;
     backend.lockRate = parseFloat(document.getElementById('hr_lock').value) || 0;
     backend.adhesiveRate = parseFloat(document.getElementById('hr_adh').value) || 0;
@@ -567,7 +582,7 @@
     localStorage.setItem('cupboard_v9_backend', JSON.stringify(backend));
     populateDropdowns();
     closeAdmin();
-    alert('Saare Material aur Hardware Rates save ho gaye hain!');
+    alert('Saare Material, Labour aur Hardware Rates save ho gaye hain!');
   }
 
   populateDropdowns();
