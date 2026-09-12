@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Golden Star Furniture - Estimator & Admin</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2c1810;
+      --accent: #b87333;
+      --accent-light: #f5ebe0;
+      --bg: #1a0f0a;
+      --card-bg: #ffffff;
+      --text-main: #2b1a10;
+      --text-muted: #7a685d;
+      --border: #e6ded6;
+    }
+
+    * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+
+    body {
+      background: linear-gradient(135deg, #2c1810 0%, #0f0805 100%);
+      color: var(--text-main);
+      margin: 0;
+      padding: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      background: var(--card-bg);
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      padding: 22px;
+      position: relative;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 15px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand { display: flex; align-items: flex-start; gap: 10px; }
+    .brand i {
+      font-size: 20px; color: var(--accent);
+      background: var(--accent-light); padding: 10px; border-radius: 12px;
+      margin-top: 2px;
+    }
+    .brand-title h2 { margin: 0; font-size: 18px; color: var(--primary); font-weight: 800; }
+    .brand-title p { margin: 2px 0 0 0; font-size: 11px; color: var(--text-muted); font-weight: 600; line-height: 1.3; }
+
+    .rates-btn {
+      background: var(--accent-light); color: var(--primary);
+      border: 1px solid #e0cdbc; padding: 8px 12px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; gap: 6px; white-space: nowrap;
+    }
+
+    .section-header {
+      font-size: 11px; font-weight: 800; letter-spacing: 0.8px;
+      color: var(--accent); text-transform: uppercase;
+      margin: 16px 0 8px 0; display: flex; align-items: center; gap: 6px;
+    }
+
+    .dim-row { display: flex; gap: 10px; margin-bottom: 10px; }
+    
+    .input-box {
+      flex: 1; background: #fdfbf7; border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 8px 12px; transition: all 0.2s;
+    }
+    .input-box label { display: block; font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 2px; }
+    .input-box input, .input-box select {
+      width: 100%; border: none; outline: none; background: transparent;
+      font-size: 13px; font-weight: 700; color: var(--primary);
+    }
+
+    .select-box {
+      width: 100%; background: #fdfbf7; border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;
+    }
+    .select-box label { display: block; font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; }
+    .select-box select {
+      width: 100%; border: none; outline: none; background: transparent;
+      font-size: 13px; font-weight: 700; color: var(--primary);
+    }
+
+    .btn-calc {
+      width: 100%; background: linear-gradient(135deg, #b87333 0%, #2c1810 100%);
+      color: #fff; border: none; padding: 14px; border-radius: 14px;
+      font-size: 15px; font-weight: 800; cursor: pointer; margin-top: 15px;
+      box-shadow: 0 6px 18px rgba(184, 115, 51, 0.3);
+      display: flex; justify-content: center; align-items: center; gap: 8px;
+    }
+
+    .result-card {
+      margin-top: 18px; background: #2c1810; color: #fff;
+      border-radius: 16px; padding: 16px; display: none;
+    }
+
+    .res-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; color: #d1c2b5; }
+    .res-row.highlight { color: #f5ebe0; font-weight: 700; background: rgba(255,255,255,0.05); padding: 4px 6px; border-radius: 6px; }
+    .hw-subrow { font-size: 11px; color: #a89485; padding-left: 10px; margin-bottom: 3px; display: flex; justify-content: space-between; }
+
+    .res-total {
+      border-top: 1px dashed #5c4132; margin-top: 10px; padding-top: 10px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .res-total h3 { margin: 0; font-size: 20px; color: var(--accent); font-weight: 800; }
+
+    .whatsapp-btn {
+      width: 100%; background: #25D366; color: #fff; border: none;
+      padding: 11px; border-radius: 10px; font-size: 13px; font-weight: 700;
+      cursor: pointer; margin-top: 12px; display: flex; justify-content: center; align-items: center; gap: 6px;
+    }
+
+    .modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.75); justify-content: center; align-items: center;
+      z-index: 100; backdrop-filter: blur(4px);
+    }
+    .modal-content {
+      background: #fff; padding: 20px; border-radius: 18px;
+      width: 92%; max-width: 440px; max-height: 88vh; overflow-y: auto;
+    }
+    .admin-group { margin-bottom: 10px; }
+    .admin-group label { font-size: 11px; font-weight: 700; color: var(--primary); }
+    .admin-group input, .admin-group select { width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 8px; margin-top: 2px; }
+    
+    .mat-edit-row {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 6px; background: #fdfbf7; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border);
+    }
+    .mat-edit-row span { flex: 1; font-size: 11px; font-weight: 700; color: var(--primary); }
+    .mat-edit-row input { width: 70px; padding: 4px 6px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; font-weight: 700; text-align: right; }
+    .del-btn { color: #d9534f; cursor: pointer; font-size: 13px; padding: 4px; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <div class="header">
+    <div class="brand">
+      <i class="fa-solid fa-couch"></i>
+      <div class="brand-title">
+        <h2>Golden Star Furniture</h2>
+        <p>📍 Xchange Road Lalchowk, Near Aadhar Center<br>📞 7006688390</p>
+      </div>
+    </div>
+    <button class="rates-btn" onclick="openAdminWithPin()">
+      <i class="fa-solid fa-lock"></i> Admin
+    </button>
+  </div>
+
+  <!-- 1. Dimensions -->
+  <div class="section-header"><i class="fa-solid fa-ruler-combined"></i> 1. Outer Dimensions</div>
+  <div class="dim-row">
+    <div class="input-box">
+      <label>HEIGHT (FT)</label>
+      <input type="number" id="height" value="6" step="0.1">
+    </div>
+    <div class="input-box">
+      <label>WIDTH (FT)</label>
+      <input type="number" id="width" value="4" step="0.1">
+    </div>
+    <div class="input-box">
+      <label>DEPTH (FT)</label>
+      <input type="number" id="depth" value="1.5" step="0.1">
+    </div>
+  </div>
+
+  <!-- 2. Internal Setup -->
+  <div class="section-header"><i class="fa-solid fa-table-cells"></i> 2. Shelves & Partitions</div>
+  <div class="dim-row">
+    <div class="input-box">
+      <label>CENTER PARTITIONS</label>
+      <select id="partitions">
+        <option value="0">0 Partition (Open Box)</option>
+        <option value="1" selected>1 Vertical Partition</option>
+        <option value="2">2 Vertical Partitions</option>
+      </select>
+    </div>
+    <div class="input-box">
+      <label>NUMBER OF SHELVES</label>
+      <select id="shelves">
+        <option value="2">2 Shelves</option>
+        <option value="3" selected>3 Shelves</option>
+        <option value="4">4 Shelves</option>
+        <option value="5">5 Shelves</option>
+        <option value="6">6 Shelves</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 3. Material Selection -->
+  <div class="section-header"><i class="fa-solid fa-layer-group"></i> 3. Material Specifications</div>
+  <div class="select-box">
+    <label>INNER STRUCTURE / CARCASS (18mm)</label>
+    <select id="carcassSelect"></select>
+  </div>
+  <div class="select-box">
+    <label>DOORS / SHUTTERS (18mm/19mm)</label>
+    <select id="doorSelect"></select>
+  </div>
+  <div class="select-box">
+    <label>BACKING SHEET (6mm/8mm)</label>
+    <select id="backSelect"></select>
+  </div>
+
+  <!-- 4. Exact Hardware Details -->
+  <div class="section-header"><i class="fa-solid fa-screwdriver-wrench"></i> 4. Hardware Details</div>
+  <div class="dim-row">
+    <div class="input-box">
+      <label>HINGES / KABZE (PCS)</label>
+      <input type="number" id="hingeCount" value="8" min="0">
+    </div>
+    <div class="input-box">
+      <label>LOCKS NEEDED (PCS)</label>
+      <input type="number" id="lockCount" value="3" min="0">
+    </div>
+    <div class="input-box">
+      <label>DRAWERS NEEDED</label>
+      <input type="number" id="drawerCount" value="3" min="0">
+    </div>
+  </div>
+
+  <button class="btn-calc" onclick="calculate()">
+    <i class="fa-solid fa-calculator"></i> Calculate Exact Estimate
+  </button>
+
+  <!-- RESULT CARD -->
+  <div class="result-card" id="resultCard">
+    <div class="res-row"><span>Front Size:</span><strong id="sqftText">0 Sq. Ft.</strong></div>
+    <div class="res-row highlight"><span>1 Single Shelf Size:</span><strong id="singleShelfText">0 Ft x 0 Ft</strong></div>
+    <div class="res-row highlight"><span>Total Shelves Area:</span><strong id="totalShelvesAreaText">0 Sq. Ft.</strong></div>
+    <div class="res-row highlight"><span>Total Carcass Ply:</span><strong id="carcassSqftText">0 Sq. Ft.</strong></div>
+
+    <div style="border-top:1px solid #4a3427; margin:10px 0; padding-top:6px;"></div>
+    
+    <div class="res-row"><span>Inner Structure Cost:</span><span id="carcassCostText">₹0</span></div>
+    <div class="res-row"><span>Shutters / Doors Cost:</span><span id="doorCostText">₹0</span></div>
+    <div class="res-row"><span>Back Ply Cost:</span><span id="backCostText">₹0</span></div>
+
+    <!-- Hardware Breakdown -->
+    <div class="res-row" style="color:var(--accent); font-weight:700; margin-top:8px;"><span>Hardware Breakdown:</span><span id="hwTotalText">₹0</span></div>
+    <div class="hw-subrow"><span>• Hinges/Kabze (<span id="hingeQtyText">0</span> Pcs @ ₹<span id="hingeRateText">250</span>):</span><span id="hingeCostText">₹0</span></div>
+    <div class="hw-subrow"><span>• Locks (<span id="lockQtyText">0</span> Pcs @ ₹<span id="lockRateText">300</span>):</span><span id="lockCostText">₹0</span></div>
+    <div class="hw-subrow"><span>• Adhesive/Fevicol (<span id="fevicolQtyText">0</span> kg @ ₹<span id="fevicolRateText">600</span>):</span><span id="fevicolCostText">₹0</span></div>
+    <div class="hw-subrow"><span>• Edge Banding Roll:</span><span id="edgeCostText">₹0</span></div>
+    <div class="hw-subrow"><span>• Extra Hardware (Screws/Handles):</span><span id="extraHwCostText">₹0</span></div>
+
+    <div class="res-row" style="margin-top:6px;"><span>Extra Drawers Charge:</span><span id="drawerCostText">₹0</span></div>
+
+    <div class="res-total">
+      <span>Estimated Total</span>
+      <h3 id="totalText">₹0</h3>
+    </div>
+
+    <button class="whatsapp-btn" onclick="shareWhatsApp()">
+      <i class="fa-brands fa-whatsapp"></i> Share Quotation on WhatsApp
+    </button>
+  </div>
+</div>
+
+<!-- Admin Modal -->
+<div class="modal" id="adminModal">
+  <div class="modal-content">
+    <h3 style="color:var(--primary); margin-top:0;">Admin Panel - Material & Rates</h3>
+    
+    <!-- EDIT EXISTING PLYWOOD/MICA RATES -->
+    <div style="border-bottom:1px solid #e0cdbc; padding-bottom:12px; margin-bottom:12px;">
+      <h4 style="margin:0 0 8px 0; color:var(--accent);"><i class="fa-solid fa-pen-to-square"></i> Edit Material Rates (₹ / Sq.Ft)</h4>
+      <div id="materialRatesForm"></div>
+    </div>
+
+    <!-- HARDWARE SECTION -->
+    <div style="border-bottom:1px solid #e0cdbc; padding-bottom:12px; margin-bottom:12px;">
+      <h4 style="margin:0 0 8px 0; color:var(--accent);"><i class="fa-solid fa-wrench"></i> Hardware Rates Setup</h4>
+      <div id="adminForm"></div>
+    </div>
+
+    <!-- NEW MATERIAL ADD-ON SECTION -->
+    <div style="border-bottom:1px solid #e0cdbc; padding-bottom:12px; margin-bottom:12px;">
+      <h4 style="margin:0 0 8px 0; color:var(--accent);"><i class="fa-solid fa-plus-circle"></i> Add New Plywood / Board Material</h4>
+      <div class="admin-group">
+        <label>Category</label>
+        <select id="newMatCategory">
+          <option value="carcass">Inner Structure (Carcass)</option>
+          <option value="doors">Doors / Shutters</option>
+          <option value="backing">Backing Sheet</option>
+        </select>
+      </div>
+      <div class="admin-group">
+        <label>Material Name / Quality</label>
+        <input type="text" id="newMatName" placeholder="e.g. 18mm Century BWP Ply">
+      </div>
+      <div class="admin-group">
+        <label>Rate Per Sq. Ft. (₹)</label>
+        <input type="number" id="newMatRate" placeholder="e.g. 165">
+      </div>
+      <button class="rates-btn" style="width:100%; background:#2c1810; color:#fff; justify-content:center; margin-top:5px;" onclick="addNewMaterial()">
+        + Add Material Option
+      </button>
+    </div>
+
+    <div>
+      <h4 style="margin:0 0 8px 0; color:var(--accent);"><i class="fa-solid fa-key"></i> Change Admin PIN</h4>
+      <div class="admin-group">
+        <label>New PIN Code</label>
+        <input type="password" id="newPinCode" placeholder="Enter new PIN">
+      </div>
+    </div>
+
+    <button class="btn-calc" onclick="saveRates()" style="margin-top:15px;">Save All Changes</button>
+    <button class="rates-btn" style="width:100%; margin-top:8px; justify-content:center;" onclick="closeAdmin()">Cancel</button>
+  </div>
+</div>
+
+<script>
+  let defaultBackend = {
+    carcass: { '18mm Commercial Ply': 110, '18mm HDMR Board': 125, '18mm Marine Ply': 145 },
+    doors: { '19mm Pine Blockboard': 130, '18mm HDMR Door': 120, '18mm Commercial Ply': 110 },
+    backing: { '6mm Commercial Back Ply': 30, '6mm Marine Back Ply': 45, '8mm HDMR Backing': 50 },
+    
+    hingeRate: 250,        
+    lockRate: 300,         
+    adhesiveRate: 600,     
+    edgeBandingRate: 300,  
+    extraHardwareFixed: 1000,
+    extraDrawerRate: 800,
+    adminPin: '1234'
+  };
+
+  let backend = JSON.parse(localStorage.getItem('cupboard_v9_backend')) || defaultBackend;
+  let lastEstimate = null;
+
+  function populateDropdowns() {
+    fillSelect('carcassSelect', backend.carcass, '/sq.ft');
+    fillSelect('doorSelect', backend.doors, '/sq.ft');
+    fillSelect('backSelect', backend.backing, '/sq.ft');
+  }
+
+  function fillSelect(elementId, dataset, suffix) {
+    let select = document.getElementById(elementId);
+    select.innerHTML = '';
+    for (let k in dataset) {
+      select.innerHTML += `<option value="${k}">${k} (₹${dataset[k]}${suffix})</option>`;
+    }
+  }
+
+  function calculate() {
+    let h = parseFloat(document.getElementById('height').value) || 0;
+    let w = parseFloat(document.getElementById('width').value) || 0;
+    let d = parseFloat(document.getElementById('depth').value) || 0;
+    
+    let numPartitions = parseInt(document.getElementById('partitions').value) || 0;
+    let numShelves = parseInt(document.getElementById('shelves').value) || 0;
+    let numHinges = parseInt(document.getElementById('hingeCount').value) || 0;
+    let numLocks = parseInt(document.getElementById('lockCount').value) || 0;
+    let drawers = parseInt(document.getElementById('drawerCount').value) || 0;
+
+    if (h <= 0 || w <= 0 || d <= 0) {
+      alert("Height, Width aur Depth sahi enter karein!");
+      return;
+    }
+
+    let frontSqft = h * w;
+
+    let outerSides = 2 * (h * d);            
+    let outerTopBottom = 2 * (w * d);         
+    let innerPartitionsArea = numPartitions * (h * d); 
+
+    let shelfLength = numPartitions > 0 ? (w / (numPartitions + 1)) : w;
+    let singleShelfSqft = shelfLength * d;
+    let totalShelvesArea = numShelves * singleShelfSqft;
+
+    let extraFramesWastage = (h * w) * 0.12; 
+    let totalCarcassSqft = outerSides + outerTopBottom + innerPartitionsArea + totalShelvesArea + extraFramesWastage;
+
+    let hingeCost = numHinges * backend.hingeRate;
+    let lockCost = numLocks * backend.lockRate;
+
+    let fevicolKg = Math.ceil((frontSqft * 2.5) / 15); 
+    if (fevicolKg < 3) fevicolKg = 3; 
+    let fevicolCost = fevicolKg * backend.adhesiveRate;
+
+    let edgeCost = backend.edgeBandingRate; 
+    let extraHwCost = backend.extraHardwareFixed;
+
+    let totalHardwareCost = hingeCost + lockCost + fevicolCost + edgeCost + extraHwCost;
+
+    let carcassName = document.getElementById('carcassSelect').value;
+    let doorName = document.getElementById('doorSelect').value;
+    let backName = document.getElementById('backSelect').value;
+
+    let carcassRate = backend.carcass[carcassName] || 0;
+    let doorRate = backend.doors[doorName] || 0;
+    let backRate = backend.backing[backName] || 0;
+
+    let carcassTotalCost = totalCarcassSqft * carcassRate;
+    let doorTotalCost = frontSqft * doorRate;
+    let backTotalCost = frontSqft * backRate;
+
+    let extraDrawers = drawers > 3 ? (drawers - 3) : 0;
+    let drawerTotalCost = extraDrawers * backend.extraDrawerRate;
+
+    let grandTotal = carcassTotalCost + doorTotalCost + backTotalCost + totalHardwareCost + drawerTotalCost;
+
+    document.getElementById('sqftText').innerText = `${frontSqft.toFixed(1)} Sq. Ft.`;
+    document.getElementById('singleShelfText').innerText = `${shelfLength.toFixed(1)}ft x ${d}ft (${singleShelfSqft.toFixed(1)} Sq.Ft)`;
+    document.getElementById('totalShelvesAreaText').innerText = `${numShelves} Shelves = ${totalShelvesArea.toFixed(1)} Sq. Ft.`;
+    document.getElementById('carcassSqftText').innerText = `${Math.round(totalCarcassSqft)} Sq. Ft.`;
+
+    document.getElementById('carcassCostText').innerText = `₹${Math.round(carcassTotalCost)}`;
+    document.getElementById('doorCostText').innerText = `₹${Math.round(doorTotalCost)}`;
+    document.getElementById('backCostText').innerText = `₹${Math.round(backTotalCost)}`;
+
+    document.getElementById('hwTotalText').innerText = `₹${Math.round(totalHardwareCost)}`;
+    document.getElementById('hingeQtyText').innerText = numHinges;
+    document.getElementById('hingeRateText').innerText = backend.hingeRate;
+    document.getElementById('hingeCostText').innerText = `₹${hingeCost}`;
+
+    document.getElementById('lockQtyText').innerText = numLocks;
+    document.getElementById('lockRateText').innerText = backend.lockRate;
+    document.getElementById('lockCostText').innerText = `₹${lockCost}`;
+
+    document.getElementById('fevicolQtyText').innerText = fevicolKg;
+    document.getElementById('fevicolRateText').innerText = backend.adhesiveRate;
+    document.getElementById('fevicolCostText').innerText = `₹${fevicolCost}`;
+
+    document.getElementById('edgeCostText').innerText = `₹${edgeCost}`;
+    document.getElementById('extraHwCostText').innerText = `₹${extraHwCost}`;
+
+    document.getElementById('drawerCostText').innerText = extraDrawers > 0 ? `₹${drawerTotalCost} (${extraDrawers} extra)` : `₹0 (Included)`;
+    document.getElementById('totalText').innerText = `₹${Math.round(grandTotal)}`;
+
+    document.getElementById('resultCard').style.display = 'block';
+
+    lastEstimate = { h, w, d, frontSqft, totalCarcassSqft, numHinges, hingeCost, numLocks, lockCost, fevicolKg, fevicolCost, totalHardwareCost, grandTotal };
+  }
+
+  function shareWhatsApp() {
+    if (!lastEstimate) return;
+    let text = `*GOLDEN STAR FURNITURE*%0A` +
+      `📍 _Xchange Road Lalchowk, Near Aadhar Center_%0A` +
+      `📞 _Phone: 7006688390_%0A` +
+      `----------------------------%0A` +
+      `📋 *CUPBOARD DETAILED QUOTATION*%0A` +
+      `----------------------------%0A` +
+      `📏 *Size:* ${lastEstimate.h}ft x ${lastEstimate.w}ft (Depth: ${lastEstimate.d}ft)%0A` +
+      `📐 *Front Area:* ${lastEstimate.frontSqft.toFixed(1)} Sq.Ft%0A` +
+      `🪵 *Carcass Material:* ~${Math.round(lastEstimate.totalCarcassSqft)} Sq.Ft%0A` +
+      `----------------------------%0A` +
+      `🔧 *Hardware Breakdown:* ₹${lastEstimate.totalHardwareCost}%0A` +
+      `• Hinges/Kabze (${lastEstimate.numHinges} Pcs): ₹${lastEstimate.hingeCost}%0A` +
+      `• Locks (${lastEstimate.numLocks} Pcs): ₹${lastEstimate.lockCost}%0A` +
+      `• Adhesive (${lastEstimate.fevicolKg} Kg): ₹${lastEstimate.fevicolCost}%0A` +
+      `• Edge Banding & Extra Fittings Included%0A` +
+      `----------------------------%0A` +
+      `💰 *Estimated Total:* ₹${Math.round(lastEstimate.grandTotal)}%0A%0A` +
+      `_Note: Quotation valid after physical site inspection._`;
+
+    window.open(`https://wa.me/?text=${text}`, '_blank');
+  }
+
+  function openAdminWithPin() {
+    let pinInput = prompt("Enter Admin PIN Code:");
+    if (pinInput === (backend.adminPin || '1234')) {
+      openAdmin();
+    } else if (pinInput !== null) {
+      alert("Galat PIN Code! Access Denied.");
+    }
+  }
+
+  function openAdmin() {
+    let matHtml = '';
+    let categories = [
+      { id: 'carcass', title: 'Inner Structure (Carcass)' },
+      { id: 'doors', title: 'Doors / Shutters' },
+      { id: 'backing', title: 'Backing Sheet' }
+    ];
+
+    categories.forEach(cat => {
+      matHtml += `<div style="font-size:11px; font-weight:800; color:var(--primary); margin:8px 0 4px 0;">${cat.title}</div>`;
+      for (let matName in backend[cat.id]) {
+        let rate = backend[cat.id][matName];
+        matHtml += `
+          <div class="mat-edit-row">
+            <span>${matName}</span>
+            <input type="number" class="mat-rate-input" data-cat="${cat.id}" data-name="${matName}" value="${rate}">
+            <i class="fa-solid fa-trash del-btn" onclick="deleteMaterial('${cat.id}', '${matName}')"></i>
+          </div>`;
+      }
+    });
+    document.getElementById('materialRatesForm').innerHTML = matHtml;
+
+    let html = '';
+    html += `<div class="admin-group"><label>Hinge/Kabza Rate (Per Pc)</label><input type="number" id="hr_hinge" value="${backend.hingeRate}"></div>`;
+    html += `<div class="admin-group"><label>Lock Rate (Per Pc)</label><input type="number" id="hr_lock" value="${backend.lockRate}"></div>`;
+    html += `<div class="admin-group"><label>Adhesive Rate (Per Kg)</label><input type="number" id="hr_adh" value="${backend.adhesiveRate}"></div>`;
+    html += `<div class="admin-group"><label>Edge Banding Tape (Per Roll)</label><input type="number" id="hr_edge" value="${backend.edgeBandingRate}"></div>`;
+    html += `<div class="admin-group"><label>Extra Hardware Allowance (Fixed)</label><input type="number" id="hr_extra" value="${backend.extraHardwareFixed}"></div>`;
+
+    document.getElementById('adminForm').innerHTML = html;
+    document.getElementById('adminModal').style.display = 'flex';
+  }
+
+  function closeAdmin() {
+    document.getElementById('adminModal').style.display = 'none';
+  }
+
+  function deleteMaterial(cat, name) {
+    if (confirm(`Kya aap "${name}" ko list se hatana chahte hain?`)) {
+      delete backend[cat][name];
+      openAdmin();
+    }
+  }
+
+  function addNewMaterial() {
+    let cat = document.getElementById('newMatCategory').value;
+    let name = document.getElementById('newMatName').value.trim();
+    let rate = parseFloat(document.getElementById('newMatRate').value) || 0;
+
+    if(!name || rate <= 0) {
+      alert('Kripya Sahi Material Name aur Rate bharein!');
+      return;
+    }
+
+    backend[cat][name] = rate;
+    localStorage.setItem('cupboard_v9_backend', JSON.stringify(backend));
+    populateDropdowns();
+    document.getElementById('newMatName').value = '';
+    document.getElementById('newMatRate').value = '';
+    openAdmin();
+    alert(`Naya Material "${name}" ₹${rate}/sq.ft ke sath add ho gaya hai!`);
+  }
+
+  function saveRates() {
+    let inputs = document.querySelectorAll('.mat-rate-input');
+    inputs.forEach(input => {
+      let cat = input.getAttribute('data-cat');
+      let name = input.getAttribute('data-name');
+      let newRate = parseFloat(input.value) || 0;
+      if (backend[cat] && backend[cat][name] !== undefined) {
+        backend[cat][name] = newRate;
+      }
+    });
+
+    backend.hingeRate = parseFloat(document.getElementById('hr_hinge').value) || 0;
+    backend.lockRate = parseFloat(document.getElementById('hr_lock').value) || 0;
+    backend.adhesiveRate = parseFloat(document.getElementById('hr_adh').value) || 0;
+    backend.edgeBandingRate = parseFloat(document.getElementById('hr_edge').value) || 0;
+    backend.extraHardwareFixed = parseFloat(document.getElementById('hr_extra').value) || 0;
+
+    let newPin = document.getElementById('newPinCode').value.trim();
+    if (newPin) {
+      backend.adminPin = newPin;
+    }
+
+    localStorage.setItem('cupboard_v9_backend', JSON.stringify(backend));
+    populateDropdowns();
+    closeAdmin();
+    alert('Saare Material aur Hardware Rates save ho gaye hain!');
+  }
+
+  populateDropdowns();
+</script>
+
+</body>
+</html>
