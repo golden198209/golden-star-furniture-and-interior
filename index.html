@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Golden Star Furniture - Estimator & Admin</title>
+  <title>Golden Star Furniture - Estimator & Visual Preview</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
     :root {
@@ -93,6 +93,61 @@
       font-size: 13px; font-weight: 700; color: var(--primary);
     }
 
+    .kitchen-section {
+      display: none; background: #fcf8f2; border: 1px dashed var(--accent);
+      padding: 10px; border-radius: 14px; margin-bottom: 10px;
+    }
+
+    /* LIVE VISUAL PREVIEW STYLES */
+    .preview-container {
+      background: #2c1810;
+      border-radius: 16px;
+      padding: 15px;
+      margin: 15px 0;
+      text-align: center;
+      color: #fff;
+      border: 2px solid var(--accent);
+    }
+    .preview-title {
+      font-size: 11px; font-weight: 800; color: var(--accent);
+      text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.5px;
+      display: flex; justify-content: center; align-items: center; gap: 6px;
+    }
+    .cabinet-visual-frame {
+      width: 100%;
+      height: 180px;
+      background: #3d2319;
+      border: 3px solid #b87333;
+      border-radius: 8px;
+      display: flex;
+      padding: 6px;
+      gap: 4px;
+      position: relative;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+    }
+    .visual-door {
+      flex: 1;
+      background: linear-gradient(135deg, #4e2e22 0%, #2c1810 100%);
+      border: 1px solid #704232;
+      border-radius: 4px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-right: 6px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    .visual-handle {
+      width: 4px;
+      height: 35px;
+      background: #d4af37;
+      border-radius: 2px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    }
+    .preview-info {
+      font-size: 10px; color: #d1c2b5; margin-top: 8px; font-weight: 600;
+    }
+
     .btn-calc {
       width: 100%; background: linear-gradient(135deg, #b87333 0%, #2c1810 100%);
       color: #fff; border: none; padding: 14px; border-radius: 14px;
@@ -109,6 +164,14 @@
     .res-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; color: #d1c2b5; }
     .res-row.highlight { color: #f5ebe0; font-weight: 700; background: rgba(255,255,255,0.05); padding: 4px 6px; border-radius: 6px; }
     .hw-subrow { font-size: 11px; color: #a89485; padding-left: 10px; margin-bottom: 3px; display: flex; justify-content: space-between; }
+    
+    .sheet-badge { 
+      background: #3d2319; 
+      border: 1px solid #5c4132; 
+      padding: 10px; 
+      border-radius: 10px; 
+      margin: 10px 0; 
+    }
 
     .res-total {
       border-top: 1px dashed #5c4132; margin-top: 10px; padding-top: 10px;
@@ -116,10 +179,16 @@
     }
     .res-total h3 { margin: 0; font-size: 20px; color: var(--accent); font-weight: 800; }
 
+    .action-btns { display: flex; gap: 8px; margin-top: 12px; }
     .whatsapp-btn {
-      width: 100%; background: #25D366; color: #fff; border: none;
-      padding: 11px; border-radius: 10px; font-size: 13px; font-weight: 700;
-      cursor: pointer; margin-top: 12px; display: flex; justify-content: center; align-items: center; gap: 6px;
+      flex: 1; background: #25D366; color: #fff; border: none;
+      padding: 11px; border-radius: 10px; font-size: 12px; font-weight: 700;
+      cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px;
+    }
+    .pdf-btn {
+      flex: 1; background: #e63946; color: #fff; border: none;
+      padding: 11px; border-radius: 10px; font-size: 12px; font-weight: 700;
+      cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px;
     }
 
     .modal {
@@ -141,6 +210,19 @@
     .mat-edit-row span { flex: 1; font-size: 11px; font-weight: 700; color: var(--primary); }
     .mat-edit-row input { width: 70px; padding: 4px 6px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; font-weight: 700; text-align: right; }
     .del-btn { color: #d9534f; cursor: pointer; font-size: 13px; padding: 4px; }
+
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      .app-container { box-shadow: none; max-width: 100%; padding: 0; }
+      .header, .section-header, .dim-row, .select-box, .kitchen-section, .btn-calc, .action-btns, .rates-btn, .preview-container { display: none !important; }
+      .result-card { display: block !important; background: #fff !important; color: #000 !important; border: 1px solid #000; padding: 10px; margin: 0; }
+      .res-row { color: #000 !important; }
+      .res-row.highlight { background: #f0f0f0 !important; color: #000 !important; }
+      .sheet-badge { background: #f9f9f9 !important; border: 1px solid #000 !important; color: #000 !important; }
+      .sheet-badge strong { color: #000 !important; }
+      .hw-subrow { color: #333 !important; }
+      .res-total h3 { color: #000 !important; }
+    }
   </style>
 </head>
 <body>
@@ -159,16 +241,63 @@
     </button>
   </div>
 
+  <!-- Cabinet / Design Type Selection -->
+  <div class="section-header"><i class="fa-solid fa-id-card"></i> Select Project Type</div>
+  <div class="select-box">
+    <label>CABINET / DESIGN TYPE</label>
+    <select id="cabinetType" onchange="toggleKitchenOptions(); adjustDefaultsForType(); updateVisualPreview();">
+      <option value="wardrobe">Standard Wardrobe (Full Height Cupboard)</option>
+      <option value="kitchen">Modular Kitchen Base Unit</option>
+      <option value="tvunit">TV Unit / Crockery Display Unit</option>
+    </select>
+  </div>
+
+  <!-- KITCHEN EXCLUSIVE ACCESSORIES -->
+  <div class="kitchen-section" id="kitchenAccessoriesSection">
+    <div style="font-size:11px; font-weight:800; color:var(--accent); margin-bottom:8px; text-transform:uppercase;">
+      <i class="fa-solid fa-kitchen-set"></i> Modular Kitchen Baskets & Appliances
+    </div>
+    <div class="dim-row">
+      <div class="input-box">
+        <label>SS WIRE BASKETS (PCS)</label>
+        <input type="number" id="kitchenBaskets" value="3" min="0">
+      </div>
+      <div class="input-box">
+        <label>BOTTLE PULL-OUT</label>
+        <select id="bottlePullout">
+          <option value="0">None</option>
+          <option value="1" selected>1 Unit (Spice/Bottle)</option>
+        </select>
+      </div>
+    </div>
+    <div class="dim-row">
+      <div class="input-box">
+        <label>CHIMNEY INCLUDED?</label>
+        <select id="hasChimney">
+          <option value="0">No Chimney</option>
+          <option value="1" selected>Yes (Standard Wall Hood)</option>
+        </select>
+      </div>
+      <div class="input-box">
+        <label>BUILT-IN HOB?</label>
+        <select id="hasHob">
+          <option value="0">No Hob</option>
+          <option value="1">Yes (Built-in Glass Hob)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
   <!-- 1. Dimensions -->
   <div class="section-header"><i class="fa-solid fa-ruler-combined"></i> 1. Outer Dimensions</div>
   <div class="dim-row">
     <div class="input-box">
       <label>HEIGHT (FT)</label>
-      <input type="number" id="height" value="6" step="0.1">
+      <input type="number" id="height" value="6" step="0.1" oninput="updateVisualPreview()">
     </div>
     <div class="input-box">
       <label>WIDTH (FT)</label>
-      <input type="number" id="width" value="4" step="0.1">
+      <input type="number" id="width" value="4" step="0.1" oninput="updateVisualPreview()">
     </div>
     <div class="input-box">
       <label>DEPTH (FT)</label>
@@ -176,58 +305,87 @@
     </div>
   </div>
 
-  <!-- 2. Internal Setup -->
-  <div class="section-header"><i class="fa-solid fa-table-cells"></i> 2. Shelves & Partitions</div>
+  <!-- 2. Internal Setup & Doors -->
+  <div class="section-header"><i class="fa-solid fa-table-cells"></i> 2. Doors, Partitions & Shelves</div>
   <div class="dim-row">
     <div class="input-box">
-      <label>CENTER PARTITIONS</label>
-      <select id="partitions">
-        <option value="0">0 Partition (Open Box)</option>
-        <option value="1" selected>1 Vertical Partition</option>
-        <option value="2">2 Vertical Partitions</option>
-      </select>
+      <label>NUMBER OF DOORS</label>
+      <input type="number" id="doorCountInput" value="2" min="1" oninput="autoCalculateHinges(); updateVisualPreview();">
     </div>
     <div class="input-box">
+      <label>CENTER PARTITIONS</label>
+      <input type="number" id="partitionsInput" value="1" min="0">
+    </div>
+  </div>
+  <div class="dim-row">
+    <div class="input-box">
       <label>NUMBER OF SHELVES</label>
-      <select id="shelves">
-        <option value="2">2 Shelves</option>
-        <option value="3" selected>3 Shelves</option>
-        <option value="4">4 Shelves</option>
-        <option value="5">5 Shelves</option>
-        <option value="6">6 Shelves</option>
-      </select>
+      <input type="number" id="shelvesInput" value="3" min="0">
     </div>
   </div>
 
-  <!-- 3. Material Selection -->
-  <div class="section-header"><i class="fa-solid fa-layer-group"></i> 3. Material Specifications</div>
+  <!-- LIVE VISUAL 2D PREVIEW BOX FOR CUSTOMER -->
+  <div class="preview-container">
+    <div class="preview-title">
+      <i class="fa-solid fa-eye"></i> Live Design Preview (Customer View)
+    </div>
+    <div class="cabinet-visual-frame" id="cabinetVisualBox">
+      <!-- Generated via JS -->
+    </div>
+    <div class="preview-info" id="previewInfoText">
+      Standard Wardrobe | 6.0 ft Height x 4.0 ft Width | 2 Shutters
+    </div>
+  </div>
+
+  <!-- 3. Material, Mica & Liner Selection -->
+  <div class="section-header"><i class="fa-solid fa-layer-group"></i> 3. Materials, Outer & Liner Mica</div>
   <div class="select-box">
     <label>INNER STRUCTURE / CARCASS (18mm)</label>
     <select id="carcassSelect"></select>
   </div>
   <div class="select-box">
-    <label>DOORS / SHUTTERS (18mm/19mm)</label>
+    <label>DOORS / SHUTTERS BOARD</label>
     <select id="doorSelect"></select>
+  </div>
+  <div class="select-box">
+    <label>OUTER MICA FINISH</label>
+    <select id="micaSelect"></select>
+  </div>
+  <div class="select-box">
+    <label>LINER MICA (INNER WALLS & SHELVES)</label>
+    <select id="linerMicaSelect"></select>
   </div>
   <div class="select-box">
     <label>BACKING SHEET (6mm/8mm)</label>
     <select id="backSelect"></select>
   </div>
 
-  <!-- 4. Exact Hardware & Labour Details -->
-  <div class="section-header"><i class="fa-solid fa-screwdriver-wrench"></i> 4. Hardware & Labour Details</div>
+  <!-- 4. Exact Hardware & Adhesives -->
+  <div class="section-header"><i class="fa-solid fa-screwdriver-wrench"></i> 4. Hardware & Adhesives Details</div>
+  
   <div class="dim-row">
     <div class="input-box">
-      <label>HINGES / KABZE (PCS)</label>
-      <input type="number" id="hingeCount" value="8" min="0">
+      <label>FEVICOL (KG)</label>
+      <input type="number" id="fevicolKgInput" value="3" min="0" step="0.5">
+    </div>
+    <div class="input-box">
+      <label>HEATX (KG)</label>
+      <input type="number" id="heatxKgInput" value="1" min="0" step="0.5">
+    </div>
+  </div>
+
+  <div class="dim-row">
+    <div class="input-box">
+      <label>HINGES / KABZE (PCS) [Auto: 3 per door]</label>
+      <input type="number" id="hingeCount" value="6" min="0">
     </div>
     <div class="input-box">
       <label>LOCKS NEEDED (PCS)</label>
-      <input type="number" id="lockCount" value="3" min="0">
+      <input type="number" id="lockCount" value="1" min="0">
     </div>
     <div class="input-box">
       <label>DRAWERS NEEDED</label>
-      <input type="number" id="drawerCount" value="3" min="0">
+      <input type="number" id="drawerCount" value="2" min="0">
     </div>
   </div>
 
@@ -237,25 +395,42 @@
 
   <!-- RESULT CARD -->
   <div class="result-card" id="resultCard">
+    <div style="text-align:center; margin-bottom:10px; border-bottom:1px solid #5c4132; padding-bottom:6px;">
+      <h3 style="margin:0; font-size:16px; color:var(--accent);">GOLDEN STAR FURNITURE</h3>
+      <p style="margin:2px 0 0 0; font-size:10px; color:#d1c2b5;">Official Project Quotation Summary</p>
+    </div>
+    <div class="res-row"><span>Project Type:</span><strong id="projTypeText">Standard Wardrobe</strong></div>
     <div class="res-row"><span>Front Size:</span><strong id="sqftText">0 Sq. Ft.</strong></div>
     <div class="res-row highlight"><span>1 Single Shelf Size:</span><strong id="singleShelfText">0 Ft x 0 Ft</strong></div>
     <div class="res-row highlight"><span>Total Shelves Area:</span><strong id="totalShelvesAreaText">0 Sq. Ft.</strong></div>
-    <div class="res-row highlight"><span>Total Carcass Ply:</span><strong id="carcassSqftText">0 Sq. Ft.</strong></div>
+    <div class="res-row highlight"><span>Total Carcass Area:</span><strong id="carcassSqftText">0 Sq. Ft.</strong></div>
+
+    <!-- WORKSHOP SHEET REQUIREMENT (8x4 Feet Sheets) -->
+    <div class="sheet-badge">
+      <div style="font-size:10px; font-weight:800; color:var(--accent); margin-bottom:4px; text-transform:uppercase;"><i class="fa-solid fa-warehouse"></i> Workshop Sheet Count (8x4 ft)</div>
+      <div class="res-row"><span>• Plywood Sheets (Carcass):</span><strong id="plywoodSheetsText" style="color:#fff;">0 Sheets</strong></div>
+      <div class="res-row"><span>• Doors / Shutters Board:</span><strong id="doorSheetsText" style="color:#fff;">0 Sheets</strong></div>
+      <div class="res-row"><span>• Outer Mica Sheets:</span><strong id="micaSheetsText" style="color:#fff;">0 Sheets</strong></div>
+      <div class="res-row"><span>• Inner Liner Mica Sheets:</span><strong id="linerSheetsText" style="color:#fff;">0 Sheets</strong></div>
+      <div class="res-row"><span>• Backing Sheet (6mm):</span><strong id="backSheetsText" style="color:#fff;">0 Sheets</strong></div>
+    </div>
 
     <div style="border-top:1px solid #4a3427; margin:10px 0; padding-top:6px;"></div>
     
-    <div class="res-row"><span>Inner Structure Cost:</span><span id="carcassCostText">₹0</span></div>
-    <div class="res-row"><span>Shutters / Doors Cost:</span><span id="doorCostText">₹0</span></div>
+    <div class="res-row"><span>Inner Structure Board Cost:</span><span id="carcassCostText">₹0</span></div>
+    <div class="res-row"><span>Shutters Board Cost:</span><span id="doorCostText">₹0</span></div>
+    <div class="res-row"><span>Outer Mica Cost:</span><span id="micaCostText">₹0</span></div>
+    <div class="res-row"><span>Liner Mica (Inner) Cost:</span><span id="linerMicaCostText">₹0</span></div>
     <div class="res-row"><span>Back Ply Cost:</span><span id="backCostText">₹0</span></div>
     <div class="res-row" style="color:#f5ebe0; font-weight:700;"><span>Labour Charges (@ ₹<span id="labourRateText">300</span>/Sq.Ft):</span><span id="labourCostText">₹0</span></div>
 
-    <!-- Hardware Breakdown -->
-    <div class="res-row" style="color:var(--accent); font-weight:700; margin-top:8px;"><span>Hardware Breakdown:</span><span id="hwTotalText">₹0</span></div>
+    <!-- Hardware & Kitchen Accessories Breakdown -->
+    <div class="res-row" style="color:var(--accent); font-weight:700; margin-top:8px;"><span>Hardware & Accessories Cost:</span><span id="hwTotalText">₹0</span></div>
     <div class="hw-subrow"><span>• Hinges/Kabze (<span id="hingeQtyText">0</span> Pcs @ ₹<span id="hingeRateText">250</span>):</span><span id="hingeCostText">₹0</span></div>
     <div class="hw-subrow"><span>• Locks (<span id="lockQtyText">0</span> Pcs @ ₹<span id="lockRateText">300</span>):</span><span id="lockCostText">₹0</span></div>
-    <div class="hw-subrow"><span>• Adhesive/Fevicol (<span id="fevicolQtyText">0</span> kg @ ₹<span id="fevicolRateText">600</span>):</span><span id="fevicolCostText">₹0</span></div>
-    <div class="hw-subrow"><span>• Edge Banding Roll:</span><span id="edgeCostText">₹0</span></div>
-    <div class="hw-subrow"><span>• Extra Hardware (Screws/Handles):</span><span id="extraHwCostText">₹0</span></div>
+    <div class="hw-subrow"><span>• Fevicol & HeatX Glue:</span><span id="glueCostText">₹0</span></div>
+    <div class="hw-subrow"><span>• Edge Banding & Extra Hardware:</span><span id="extraHwCostText">₹0</span></div>
+    <div class="hw-subrow" id="kitchenAccessoriesRow" style="display:none; color:#f5ebe0;"><span>• Kitchen Baskets/Chimney/Hob:</span><span id="kitchenAccessoriesCostText">₹0</span></div>
 
     <div class="res-row" style="margin-top:6px;"><span>Extra Drawers Charge:</span><span id="drawerCostText">₹0</span></div>
 
@@ -264,9 +439,14 @@
       <h3 id="totalText">₹0</h3>
     </div>
 
-    <button class="whatsapp-btn" onclick="shareWhatsApp()">
-      <i class="fa-brands fa-whatsapp"></i> Share Quotation on WhatsApp
-    </button>
+    <div class="action-btns">
+      <button class="whatsapp-btn" onclick="shareWhatsApp()">
+        <i class="fa-brands fa-whatsapp"></i> WhatsApp
+      </button>
+      <button class="pdf-btn" onclick="downloadPDF()">
+        <i class="fa-solid fa-file-pdf"></i> Download PDF
+      </button>
+    </div>
   </div>
 </div>
 
@@ -275,39 +455,38 @@
   <div class="modal-content">
     <h3 style="color:var(--primary); margin-top:0;">Admin Panel - Material & Rates</h3>
     
-    <!-- EDIT EXISTING PLYWOOD/MICA RATES -->
     <div style="border-bottom:1px solid #e0cdbc; padding-bottom:12px; margin-bottom:12px;">
-      <h4 style="margin:0 0 8px 0; color:var(--accent);"><i class="fa-solid fa-pen-to-square"></i> Edit Material Rates (₹ / Sq.Ft)</h4>
+      <h4 style="margin:0 0 8px 0; color:var(--accent);"><i class="fa-solid fa-pen-to-square"></i> Edit Material & Mica Rates (₹ / Sq.Ft)</h4>
       <div id="materialRatesForm"></div>
     </div>
 
-    <!-- HARDWARE SECTION -->
     <div style="border-bottom:1px solid #e0cdbc; padding-bottom:12px; margin-bottom:12px;">
-      <h4 style="margin:0 0 8px 0; color:var(--accent);"><i class="fa-solid fa-wrench"></i> Hardware & Labour Rates Setup</h4>
+      <h4 style="margin:0 0 8px 0; color:var(--accent);"><i class="fa-solid fa-wrench"></i> Hardware & Kitchen Accessory Rates</h4>
       <div id="adminForm"></div>
     </div>
 
-    <!-- NEW MATERIAL ADD-ON SECTION -->
     <div style="border-bottom:1px solid #e0cdbc; padding-bottom:12px; margin-bottom:12px;">
-      <h4 style="margin:0 0 8px 0; color:var(--accent);"><i class="fa-solid fa-plus-circle"></i> Add New Plywood / Board Material</h4>
+      <h4 style="margin:0 0 8px 0; color:var(--accent);"><i class="fa-solid fa-plus-circle"></i> Add New Option</h4>
       <div class="admin-group">
         <label>Category</label>
         <select id="newMatCategory">
           <option value="carcass">Inner Structure (Carcass)</option>
-          <option value="doors">Doors / Shutters</option>
+          <option value="doors">Doors / Shutters Board</option>
+          <option value="mica">Outer Mica Finish</option>
+          <option value="linerMica">Liner Mica (Inner)</option>
           <option value="backing">Backing Sheet</option>
         </select>
       </div>
       <div class="admin-group">
-        <label>Material Name / Quality</label>
-        <input type="text" id="newMatName" placeholder="e.g. 18mm Century BWP Ply">
+        <label>Name / Quality</label>
+        <input type="text" id="newMatName" placeholder="e.g. White Liner Mica">
       </div>
       <div class="admin-group">
         <label>Rate Per Sq. Ft. (₹)</label>
-        <input type="number" id="newMatRate" placeholder="e.g. 165">
+        <input type="number" id="newMatRate" placeholder="e.g. 45">
       </div>
       <button class="rates-btn" style="width:100%; background:#2c1810; color:#fff; justify-content:center; margin-top:5px;" onclick="addNewMaterial()">
-        + Add Material Option
+        + Add Option
       </button>
     </div>
 
@@ -328,29 +507,48 @@
   let defaultBackend = {
     carcass: { '18mm Commercial Ply': 110, '18mm HDMR Board': 125, '18mm Marine Ply': 145 },
     doors: { '19mm Pine Blockboard': 130, '18mm HDMR Door': 120, '18mm Commercial Ply': 110 },
+    mica: { 
+      'Matte Finish (0.8mm)': 60, 
+      'Matte Finish (1.0mm)': 85, 
+      'Glossy Finish (0.8mm)': 75, 
+      'Glossy Finish (1.0mm)': 105, 
+      'Texture Finish (0.8mm)': 80, 
+      'Texture Finish (1.0mm)': 115 
+    },
+    linerMica: {
+      'White Liner Mica (Standard)': 42,
+      'Woodgrain Liner Mica': 50,
+      'Premium Inner Mica': 60
+    },
     backing: { '6mm Commercial Back Ply': 30, '6mm Marine Back Ply': 45, '8mm HDMR Backing': 50 },
     
-    labourRate: 300,       
-    hingeRate: 250,        
+    labourRate: 300,        
+    hingeRate: 250,         
     lockRate: 300,          
-    adhesiveRate: 600,      
+    fevicolRate: 600,       
+    heatxRate: 600,
     edgeBandingRate: 300,  
     extraHardwareFixed: 1000,
     extraDrawerRate: 800,
+    
+    basketRate: 1500,       
+    bottlePulloutRate: 3500,
+    chimneyRate: 8500,      
+    hobRate: 11000,         
+
     adminPin: '1234'
   };
 
-  let backend = JSON.parse(localStorage.getItem('cupboard_v9_backend')) || defaultBackend;
-  
-  // Force update to 300 and 600
+  let backend = JSON.parse(localStorage.getItem('cupboard_v18_backend')) || defaultBackend;
   backend.labourRate = 300;
-  backend.adhesiveRate = 600;
 
   let lastEstimate = null;
 
   function populateDropdowns() {
     fillSelect('carcassSelect', backend.carcass, '/sq.ft');
     fillSelect('doorSelect', backend.doors, '/sq.ft');
+    fillSelect('micaSelect', backend.mica, '/sq.ft');
+    fillSelect('linerMicaSelect', backend.linerMica, '/sq.ft');
     fillSelect('backSelect', backend.backing, '/sq.ft');
   }
 
@@ -362,16 +560,95 @@
     }
   }
 
+  function autoCalculateHinges() {
+    let doors = parseInt(document.getElementById('doorCountInput').value) || 0;
+    let calculatedHinges = doors * 3;
+    document.getElementById('hingeCount').value = calculatedHinges;
+  }
+
+  function toggleKitchenOptions() {
+    let type = document.getElementById('cabinetType').value;
+    let kitchenSection = document.getElementById('kitchenAccessoriesSection');
+    if (type === 'kitchen') {
+      kitchenSection.style.display = 'block';
+    } else {
+      kitchenSection.style.display = 'none';
+    }
+  }
+
+  function adjustDefaultsForType() {
+    let type = document.getElementById('cabinetType').value;
+    if (type === 'kitchen') {
+      document.getElementById('height').value = "2.8";
+      document.getElementById('width').value = "4.0";
+      document.getElementById('depth').value = "2.0";
+      document.getElementById('doorCountInput').value = "2";
+      document.getElementById('partitionsInput').value = "1";
+      document.getElementById('shelvesInput').value = "1";
+      document.getElementById('drawerCount').value = "2";
+    } else if (type === 'tvunit') {
+      document.getElementById('height').value = "4.0";
+      document.getElementById('width').value = "5.0";
+      document.getElementById('depth').value = "1.0";
+      document.getElementById('doorCountInput').value = "2";
+      document.getElementById('partitionsInput').value = "2";
+      document.getElementById('shelvesInput').value = "3";
+      document.getElementById('drawerCount').value = "1";
+    } else {
+      document.getElementById('height').value = "6.0";
+      document.getElementById('width').value = "4.0";
+      document.getElementById('depth').value = "1.5";
+      document.getElementById('doorCountInput').value = "2";
+      document.getElementById('partitionsInput').value = "1";
+      document.getElementById('shelvesInput').value = "3";
+      document.getElementById('drawerCount').value = "3";
+    }
+    autoCalculateHinges();
+    updateVisualPreview();
+  }
+
+  // UPDATE LIVE VISUAL PREVIEW BASED ON INPUTS
+  function updateVisualPreview() {
+    let h = parseFloat(document.getElementById('height').value) || 0;
+    let w = parseFloat(document.getElementById('width').value) || 0;
+    let doors = parseInt(document.getElementById('doorCountInput').value) || 1;
+    let type = document.getElementById('cabinetType').value;
+    let typeNames = { wardrobe: "Standard Wardrobe", kitchen: "Modular Kitchen Base Unit", tvunit: "TV Unit / Crockery Unit" };
+
+    let visualBox = document.getElementById('cabinetVisualBox');
+    visualBox.innerHTML = '';
+
+    // Render doors dynamically inside the visual frame
+    let doorCount = Math.max(1, Math.min(doors, 6)); // limit visual doors between 1 and 6 for clean layout
+    for (let i = 0; i < doorCount; i++) {
+      let doorDiv = document.createElement('div');
+      doorDiv.className = 'visual-door';
+      let handle = document.createElement('div');
+      handle.className = 'visual-handle';
+      doorDiv.appendChild(handle);
+      visualBox.appendChild(doorDiv);
+    }
+
+    document.getElementById('previewInfoText').innerText = `${typeNames[type]} | ${h} ft Height x ${w} ft Width | ${doors} Shutters`;
+  }
+
   function calculate() {
+    let type = document.getElementById('cabinetType').value;
+    let typeNames = { wardrobe: "Standard Wardrobe", kitchen: "Modular Kitchen Base Unit", tvunit: "TV Unit / Crockery Unit" };
+    
     let h = parseFloat(document.getElementById('height').value) || 0;
     let w = parseFloat(document.getElementById('width').value) || 0;
     let d = parseFloat(document.getElementById('depth').value) || 0;
     
-    let numPartitions = parseInt(document.getElementById('partitions').value) || 0;
-    let numShelves = parseInt(document.getElementById('shelves').value) || 0;
+    let numDoors = parseInt(document.getElementById('doorCountInput').value) || 0;
+    let numPartitions = parseInt(document.getElementById('partitionsInput').value) || 0;
+    let numShelves = parseInt(document.getElementById('shelvesInput').value) || 0;
     let numHinges = parseInt(document.getElementById('hingeCount').value) || 0;
     let numLocks = parseInt(document.getElementById('lockCount').value) || 0;
     let drawers = parseInt(document.getElementById('drawerCount').value) || 0;
+
+    let fevicolKg = parseFloat(document.getElementById('fevicolKgInput').value) || 0;
+    let heatxKg = parseFloat(document.getElementById('heatxKgInput').value) || 0;
 
     if (h <= 0 || w <= 0 || d <= 0) {
       alert("Height, Width aur Depth sahi enter karein!");
@@ -391,44 +668,83 @@
     let extraFramesWastage = (h * w) * 0.12; 
     let totalCarcassSqft = outerSides + outerTopBottom + innerPartitionsArea + totalShelvesArea + extraFramesWastage;
 
-    let labourCost = frontSqft * backend.labourRate;
+    let innerWallsLinerArea = (2 * (h * d)) + (2 * (w * d)); 
+    let partitionsLinerArea = numPartitions * (h * d) * 2;    
+    let shelvesLinerArea = numShelves * singleShelfSqft * 2;    
+    let drawersLinerArea = drawers * 12; 
+    let totalLinerMicaSqft = innerWallsLinerArea + partitionsLinerArea + shelvesLinerArea + drawersLinerArea;
 
+    let plywoodSheetsCount = Math.ceil((totalCarcassSqft + (frontSqft * 0.8)) * 1.15 / 32);
+    let doorSheetsCount = Math.ceil((frontSqft * 1.12) / 32); 
+    let outerMicaSheetsCount = Math.ceil((frontSqft * 1.12) / 32);
+    let linerMicaSheetsCount = Math.ceil((totalLinerMicaSqft * 1.15) / 32); 
+    let backSheetsCount = Math.ceil((frontSqft * 1.08) / 32);
+
+    let labourCost = frontSqft * backend.labourRate;
     let hingeCost = numHinges * backend.hingeRate;
     let lockCost = numLocks * backend.lockRate;
 
-    let fevicolKg = Math.ceil((frontSqft * 2.5) / 15); 
-    if (fevicolKg < 3) fevicolKg = 3; 
-    let fevicolCost = fevicolKg * backend.adhesiveRate;
+    let fevicolCost = fevicolKg * (backend.fevicolRate || 600);
+    let heatxCost = heatxKg * (backend.heatxRate || 600);
+    let glueTotalCost = fevicolCost + heatxCost;
 
     let edgeCost = backend.edgeBandingRate; 
     let extraHwCost = backend.extraHardwareFixed;
 
-    let totalHardwareCost = hingeCost + lockCost + fevicolCost + edgeCost + extraHwCost;
+    let kitchenAccCost = 0;
+    if (type === 'kitchen') {
+      let basketsCount = parseInt(document.getElementById('kitchenBaskets').value) || 0;
+      let bottlePulloutCount = parseInt(document.getElementById('bottlePullout').value) || 0;
+      let chimneyCount = parseInt(document.getElementById('hasChimney').value) || 0;
+      let hobCount = parseInt(document.getElementById('hasHob').value) || 0;
+
+      kitchenAccCost = (basketsCount * (backend.basketRate || 1500)) +
+                       (bottlePulloutCount * (backend.bottlePulloutRate || 3500)) +
+                       (chimneyCount * (backend.chimneyRate || 8500)) +
+                       (hobCount * (backend.hobRate || 11000));
+    }
+
+    let totalHardwareCost = hingeCost + lockCost + glueTotalCost + edgeCost + extraHwCost + kitchenAccCost;
 
     let carcassName = document.getElementById('carcassSelect').value;
     let doorName = document.getElementById('doorSelect').value;
+    let micaName = document.getElementById('micaSelect').value;
+    let linerMicaName = document.getElementById('linerMicaSelect').value;
     let backName = document.getElementById('backSelect').value;
 
     let carcassRate = backend.carcass[carcassName] || 0;
     let doorRate = backend.doors[doorName] || 0;
+    let micaRate = backend.mica[micaName] || 0;
+    let linerMicaRate = backend.linerMica[linerMicaName] || 0;
     let backRate = backend.backing[backName] || 0;
 
     let carcassTotalCost = totalCarcassSqft * carcassRate;
     let doorTotalCost = frontSqft * doorRate;
+    let micaTotalCost = frontSqft * micaRate;
+    let linerMicaTotalCost = totalLinerMicaSqft * linerMicaRate; 
     let backTotalCost = frontSqft * backRate;
 
     let extraDrawers = drawers > 3 ? (drawers - 3) : 0;
     let drawerTotalCost = extraDrawers * backend.extraDrawerRate;
 
-    let grandTotal = carcassTotalCost + doorTotalCost + backTotalCost + labourCost + totalHardwareCost + drawerTotalCost;
+    let grandTotal = carcassTotalCost + doorTotalCost + micaTotalCost + linerMicaTotalCost + backTotalCost + labourCost + totalHardwareCost + drawerTotalCost;
 
+    document.getElementById('projTypeText').innerText = typeNames[type] || "Standard Wardrobe";
     document.getElementById('sqftText').innerText = `${frontSqft.toFixed(1)} Sq. Ft.`;
     document.getElementById('singleShelfText').innerText = `${shelfLength.toFixed(1)}ft x ${d}ft (${singleShelfSqft.toFixed(1)} Sq.Ft)`;
     document.getElementById('totalShelvesAreaText').innerText = `${numShelves} Shelves = ${totalShelvesArea.toFixed(1)} Sq. Ft.`;
     document.getElementById('carcassSqftText').innerText = `${Math.round(totalCarcassSqft)} Sq. Ft.`;
 
+    document.getElementById('plywoodSheetsText').innerText = `${plywoodSheetsCount} Sheets (8x4)`;
+    document.getElementById('doorSheetsText').innerText = `${doorSheetsCount} Sheets (8x4)`;
+    document.getElementById('micaSheetsText').innerText = `${outerMicaSheetsCount} Sheets (8x4)`;
+    document.getElementById('linerSheetsText').innerText = `${linerMicaSheetsCount} Sheets (8x4)`;
+    document.getElementById('backSheetsText').innerText = `${backSheetsCount} Sheets (8x4)`;
+
     document.getElementById('carcassCostText').innerText = `₹${Math.round(carcassTotalCost)}`;
     document.getElementById('doorCostText').innerText = `₹${Math.round(doorTotalCost)}`;
+    document.getElementById('micaCostText').innerText = `₹${Math.round(micaTotalCost)}`;
+    document.getElementById('linerMicaCostText').innerText = `₹${Math.round(linerMicaTotalCost)}`;
     document.getElementById('backCostText').innerText = `₹${Math.round(backTotalCost)}`;
 
     document.getElementById('labourRateText').innerText = backend.labourRate;
@@ -439,23 +755,27 @@
     document.getElementById('hingeRateText').innerText = backend.hingeRate;
     document.getElementById('hingeCostText').innerText = `₹${hingeCost}`;
 
-    document.getElementById('lockQtyText').innerText = numLocks;
-    document.getElementById('lockRateText').innerText = backend.lockRate;
-    document.getElementById('lockCostText').innerText = `₹${lockCost}`;
+    document.getElementById('glueCostText').innerText = `₹${glueTotalCost}`;
+    document.getElementById('extraHwCostText').innerText = `₹${edgeCost + extraHwCost}`;
 
-    document.getElementById('fevicolQtyText').innerText = fevicolKg;
-    document.getElementById('fevicolRateText').innerText = backend.adhesiveRate;
-    document.getElementById('fevicolCostText').innerText = `₹${fevicolCost}`;
-
-    document.getElementById('edgeCostText').innerText = `₹${edgeCost}`;
-    document.getElementById('extraHwCostText').innerText = `₹${extraHwCost}`;
+    let kitchenAccRow = document.getElementById('kitchenAccessoriesRow');
+    if (type === 'kitchen' && kitchenAccCost > 0) {
+      kitchenAccRow.style.display = 'flex';
+      document.getElementById('kitchenAccessoriesCostText').innerText = `₹${kitchenAccCost}`;
+    } else {
+      kitchenAccRow.style.display = 'none';
+    }
 
     document.getElementById('drawerCostText').innerText = extraDrawers > 0 ? `₹${drawerTotalCost} (${extraDrawers} extra)` : `₹0 (Included)`;
     document.getElementById('totalText').innerText = `₹${Math.round(grandTotal)}`;
 
     document.getElementById('resultCard').style.display = 'block';
 
-    lastEstimate = { h, w, d, frontSqft, totalCarcassSqft, labourCost, numHinges, hingeCost, numLocks, lockCost, fevicolKg, fevicolCost, totalHardwareCost, grandTotal };
+    lastEstimate = { type: typeNames[type], h, w, d, frontSqft, plywoodSheetsCount, doorSheetsCount, outerMicaSheetsCount, linerMicaSheetsCount, backSheetsCount, kitchenAccCost, grandTotal };
+  }
+
+  function downloadPDF() {
+    window.print();
   }
 
   function shareWhatsApp() {
@@ -464,128 +784,122 @@
       `📍 _Xchange Road Lalchowk, Near Aadhar Center_%0A` +
       `📞 _Phone: 7006688390_%0A` +
       `----------------------------%0A` +
-      `📋 *CUPBOARD DETAILED QUOTATION*%0A` +
+      `📋 *${lastEstimate.type.toUpperCase()} QUOTATION*%0A` +
       `----------------------------%0A` +
       `📏 *Size:* ${lastEstimate.h}ft x ${lastEstimate.w}ft (Depth: ${lastEstimate.d}ft)%0A` +
       `📐 *Front Area:* ${lastEstimate.frontSqft.toFixed(1)} Sq.Ft%0A` +
-      `🪵 *Carcass Material:* ~${Math.round(lastEstimate.totalCarcassSqft)} Sq.Ft%0A` +
-      `🔨 *Labour Charge:* ₹${Math.round(lastEstimate.labourCost)} (@₹${backend.labourRate}/sqft)%0A` +
+      `📦 *Material Sheets (8x4):*%0A` +
+      `  • Plywood (Carcass): ${lastEstimate.plywoodSheetsCount} Sheets%0A` +
+      `  • Doors / Shutters: ${lastEstimate.doorSheetsCount} Sheets%0A` +
+      `  • Outer Mica: ${lastEstimate.outerMicaSheetsCount} Sheets%0A` +
+      `  • Liner Mica: ${lastEstimate.linerMicaSheetsCount} Sheets%0A` +
+      `  • Backing Sheet: ${lastEstimate.backSheetsCount} Sheets%0A` +
+      (lastEstimate.kitchenAccCost > 0 ? `  • Kitchen Accessories & Appliances Included%0A` : ``) +
       `----------------------------%0A` +
-      `🔧 *Hardware Breakdown:* ₹${lastEstimate.totalHardwareCost}%0A` +
-      `• Hinges/Kabze (${lastEstimate.numHinges} Pcs): ₹${lastEstimate.hingeCost}%0A` +
-      `• Locks (${lastEstimate.numLocks} Pcs): ₹${lastEstimate.lockCost}%0A` +
-      `• Adhesive (${lastEstimate.fevicolKg} Kg @ ₹${backend.adhesiveRate}): ₹${lastEstimate.fevicolCost}%0A` +
-      `• Edge Banding & Extra Fittings Included%0A` +
-      `----------------------------%0A` +
-      `💰 *Estimated Total:* ₹${Math.round(lastEstimate.grandTotal)}%0A%0A` +
-      `_Note: Quotation valid after physical site inspection._`;
-
+      `💰 *Estimated Total:* ₹${Math.round(lastEstimate.grandTotal)}`;
     window.open(`https://wa.me/?text=${text}`, '_blank');
   }
 
   function openAdminWithPin() {
-    let pinInput = prompt("Enter Admin PIN Code:");
-    if (pinInput === (backend.adminPin || '1234')) {
-      openAdmin();
-    } else if (pinInput !== null) {
-      alert("Galat PIN Code! Access Denied.");
+    let pin = prompt("Enter Admin PIN:");
+    if (pin === backend.adminPin) {
+      renderAdminModal();
+      document.getElementById('adminModal').style.display = 'flex';
+    } else if (pin !== null) {
+      alert("Galat PIN!");
     }
-  }
-
-  function openAdmin() {
-    let matHtml = '';
-    let categories = [
-      { id: 'carcass', title: 'Inner Structure (Carcass)' },
-      { id: 'doors', title: 'Doors / Shutters' },
-      { id: 'backing', title: 'Backing Sheet' }
-    ];
-
-    categories.forEach(cat => {
-      matHtml += `<div style="font-size:11px; font-weight:800; color:var(--primary); margin:8px 0 4px 0;">${cat.title}</div>`;
-      for (let matName in backend[cat.id]) {
-        let rate = backend[cat.id][matName];
-        matHtml += `
-          <div class="mat-edit-row">
-            <span>${matName}</span>
-            <input type="number" class="mat-rate-input" data-cat="${cat.id}" data-name="${matName}" value="${rate}">
-            <i class="fa-solid fa-trash del-btn" onclick="deleteMaterial('${cat.id}', '${matName}')"></i>
-          </div>`;
-      }
-    });
-    document.getElementById('materialRatesForm').innerHTML = matHtml;
-
-    let html = '';
-    html += `<div class="admin-group"><label>Labour Charge Rate (Per Sq.Ft)</label><input type="number" id="hr_labour" value="${backend.labourRate}"></div>`;
-    html += `<div class="admin-group"><label>Hinge/Kabza Rate (Per Pc)</label><input type="number" id="hr_hinge" value="${backend.hingeRate}"></div>`;
-    html += `<div class="admin-group"><label>Lock Rate (Per Pc)</label><input type="number" id="hr_lock" value="${backend.lockRate}"></div>`;
-    html += `<div class="admin-group"><label>Adhesive Rate (Per Kg)</label><input type="number" id="hr_adh" value="${backend.adhesiveRate}"></div>`;
-    html += `<div class="admin-group"><label>Edge Banding Tape (Per Roll)</label><input type="number" id="hr_edge" value="${backend.edgeBandingRate}"></div>`;
-    html += `<div class="admin-group"><label>Extra Hardware Allowance (Fixed)</label><input type="number" id="hr_extra" value="${backend.extraHardwareFixed}"></div>`;
-
-    document.getElementById('adminForm').innerHTML = html;
-    document.getElementById('adminModal').style.display = 'flex';
   }
 
   function closeAdmin() {
     document.getElementById('adminModal').style.display = 'none';
   }
 
-  function deleteMaterial(cat, name) {
-    if (confirm(`Kya aap "${name}" ko list se hatana chahte hain?`)) {
-      delete backend[cat][name];
-      openAdmin();
+  function renderAdminModal() {
+    let matForm = document.getElementById('materialRatesForm');
+    matForm.innerHTML = '';
+    
+    let categories = { carcass: 'Inner Carcass', doors: 'Doors', mica: 'Outer Mica', linerMica: 'Liner Mica', backing: 'Backing Sheet' };
+    for (let cat in categories) {
+      matForm.innerHTML += `<div style="font-size:11px; font-weight:800; color:var(--primary); margin:6px 0 2px 0;">${categories[cat]}</div>`;
+      for (let item in backend[cat]) {
+        matForm.innerHTML += `
+          <div class="mat-edit-row">
+            <span>${item}</span>
+            <input type="number" id="rate_${cat}_${item}" value="${backend[cat][item]}">
+            <i class="fa-solid fa-trash del-btn" onclick="deleteMaterial('${cat}', '${item}')"></i>
+          </div>
+        `;
+      }
     }
+
+    let adminForm = document.getElementById('adminForm');
+    adminForm.innerHTML = `
+      <div class="admin-group"><label>Hinges Rate (₹/pc)</label><input type="number" id="adm_hinge" value="${backend.hingeRate}"></div>
+      <div class="admin-group"><label>Locks Rate (₹/pc)</label><input type="number" id="adm_lock" value="${backend.lockRate}"></div>
+      <div class="admin-group"><label>Fevicol Rate (₹/kg)</label><input type="number" id="adm_fev" value="${backend.fevicolRate}"></div>
+      <div class="admin-group"><label>Kitchen Baskets Rate (₹/pc)</label><input type="number" id="adm_basket" value="${backend.basketRate}"></div>
+      <div class="admin-group"><label>Chimney Rate (₹)</label><input type="number" id="adm_chimney" value="${backend.chimneyRate}"></div>
+      <div class="admin-group"><label>Built-in Hob Rate (₹)</label><input type="number" id="adm_hob" value="${backend.hobRate}"></div>
+    `;
   }
 
   function addNewMaterial() {
     let cat = document.getElementById('newMatCategory').value;
     let name = document.getElementById('newMatName').value.trim();
-    let rate = parseFloat(document.getElementById('newMatRate').value) || 0;
+    let rate = parseFloat(document.getElementById('newMatRate').value);
 
-    if(!name || rate <= 0) {
-      alert('Kripya Sahi Material Name aur Rate bharein!');
+    if (!name || isNaN(rate)) {
+      alert("Sahi naam aur rate bharein!");
       return;
     }
 
     backend[cat][name] = rate;
-    localStorage.setItem('cupboard_v9_backend', JSON.stringify(backend));
-    populateDropdowns();
     document.getElementById('newMatName').value = '';
     document.getElementById('newMatRate').value = '';
-    openAdmin();
-    alert(`Naya Material "${name}" ₹${rate}/sq.ft ke sath add ho gaya hai!`);
+    renderAdminModal();
+  }
+
+  function deleteMaterial(cat, item) {
+    if (Object.keys(backend[cat]).length <= 1) {
+      alert("Kam se kam ek option rehna zaroori hai!");
+      return;
+    }
+    delete backend[cat][item];
+    renderAdminModal();
   }
 
   function saveRates() {
-    let inputs = document.querySelectorAll('.mat-rate-input');
-    inputs.forEach(input => {
-      let cat = input.getAttribute('data-cat');
-      let name = input.getAttribute('data-name');
-      let newRate = parseFloat(input.value) || 0;
-      if (backend[cat] && backend[cat][name] !== undefined) {
-        backend[cat][name] = newRate;
+    let categories = ['carcass', 'doors', 'mica', 'linerMica', 'backing'];
+    for (let cat of categories) {
+      for (let item in backend[cat]) {
+        let inputElem = document.getElementById(`rate_${cat}_${item}`);
+        if (inputElem) {
+          backend[cat][item] = parseFloat(inputElem.value) || backend[cat][item];
+        }
       }
-    });
+    }
 
-    backend.labourRate = parseFloat(document.getElementById('hr_labour').value) || 0;
-    backend.hingeRate = parseFloat(document.getElementById('hr_hinge').value) || 0;
-    backend.lockRate = parseFloat(document.getElementById('hr_lock').value) || 0;
-    backend.adhesiveRate = parseFloat(document.getElementById('hr_adh').value) || 0;
-    backend.edgeBandingRate = parseFloat(document.getElementById('hr_edge').value) || 0;
-    backend.extraHardwareFixed = parseFloat(document.getElementById('hr_extra').value) || 0;
+    backend.hingeRate = parseFloat(document.getElementById('adm_hinge').value) || backend.hingeRate;
+    backend.lockRate = parseFloat(document.getElementById('adm_lock_val') || document.getElementById('adm_lock').value) || backend.lockRate;
+    backend.fevicolRate = parseFloat(document.getElementById('adm_fev').value) || backend.fevicolRate;
+    backend.basketRate = parseFloat(document.getElementById('adm_basket').value) || backend.basketRate;
+    backend.chimneyRate = parseFloat(document.getElementById('adm_chimney').value) || backend.chimneyRate;
+    backend.hobRate = parseFloat(document.getElementById('adm_hob').value) || backend.hobRate;
 
     let newPin = document.getElementById('newPinCode').value.trim();
     if (newPin) {
       backend.adminPin = newPin;
     }
 
-    localStorage.setItem('cupboard_v9_backend', JSON.stringify(backend));
+    localStorage.setItem('cupboard_v18_backend', JSON.stringify(backend));
     populateDropdowns();
     closeAdmin();
-    alert('Saare Material, Labour aur Hardware Rates save ho gaye hain!');
+    alert("Sabhi changes successfully save ho gaye hain!");
   }
 
+  // Initial Setup on Page Load
   populateDropdowns();
+  updateVisualPreview();
 </script>
 
 </body>
