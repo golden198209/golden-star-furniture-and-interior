@@ -71,28 +71,37 @@
       margin: 16px 0 8px 0; display: flex; align-items: center; gap: 6px;
     }
 
-    /* Design Preview Box */
+    /* Custom Image Upload & Preview Box */
     .design-preview-box {
       margin-bottom: 12px;
       background: #fdfbf7;
-      border: 1.5px solid var(--border);
+      border: 1.5px dashed var(--accent);
       border-radius: 14px;
-      padding: 8px;
+      padding: 10px;
       text-align: center;
-      display: none;
     }
     .design-preview-box img {
       width: 100%;
-      height: 160px;
+      height: 180px;
       object-fit: cover;
       border-radius: 10px;
+      display: none;
+      margin-bottom: 8px;
     }
-    .design-preview-box p {
-      margin: 6px 0 2px 0;
+    .upload-label {
+      background: var(--accent-light);
+      color: var(--primary);
+      padding: 8px 14px;
+      border-radius: 8px;
       font-size: 11px;
       font-weight: 700;
-      color: var(--primary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #e0cdbc;
     }
+    .upload-label input { display: none; }
 
     .dim-row { display: flex; gap: 10px; margin-bottom: 10px; }
     
@@ -182,7 +191,6 @@
     }
     .mat-edit-row span { flex: 1; font-size: 11px; font-weight: 700; color: var(--primary); }
     .mat-edit-row input { width: 70px; padding: 4px 6px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; font-weight: 700; text-align: right; }
-    .del-btn { color: #d9534f; cursor: pointer; font-size: 13px; padding: 4px; }
   </style>
 </head>
 <body>
@@ -205,17 +213,20 @@
   <div class="section-header"><i class="fa-solid fa-id-card"></i> Select Project Type</div>
   <div class="select-box">
     <label>CABINET / DESIGN TYPE</label>
-    <select id="cabinetType" onchange="toggleKitchenOptions(); adjustDefaultsForType(); updatePreviewImage();">
+    <select id="cabinetType" onchange="toggleKitchenOptions(); adjustDefaultsForType();">
       <option value="wardrobe">Standard Wardrobe (Full Height Cupboard)</option>
       <option value="kitchen">Modular Kitchen Base Unit</option>
       <option value="tvunit">TV Unit / Crockery Display Unit</option>
     </select>
   </div>
 
-  <!-- Design Reference Photo Preview Box -->
-  <div class="design-preview-box" id="designPreviewBox">
-    <img id="previewImg" src="" alt="Selected Design Reference">
-    <p id="previewText">Selected Design Preview</p>
+  <!-- Customer Image Upload & Preview Section -->
+  <div class="design-preview-box">
+    <img id="userUploadedImg" alt="Design Reference">
+    <label class="upload-label">
+      <i class="fa-solid fa-camera"></i> Upload Design Photo from Phone
+      <input type="file" accept="image/*" onchange="previewUserImage(event)">
+    </label>
   </div>
 
   <!-- KITCHEN EXCLUSIVE ACCESSORIES -->
@@ -437,24 +448,7 @@
     adminPin: '1234'
   };
 
-  let backend = JSON.parse(localStorage.getItem('cupboard_v17_backend')) || defaultBackend;
-
-  // Design images list (आप यहाँ अपनी और भी फोटो के लिंक या बेस64 डाल सकते हैं)
-  let designImages = {
-    wardrobe: {
-      url: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=600&q=80", 
-      title: "Modern Full Height Wardrobe Design Reference"
-    },
-    kitchen: {
-      url: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80",
-      title: "Modular Kitchen Unit Design Reference"
-    },
-    tvunit: {
-      url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80",
-      title: "TV & Crockery Display Unit Reference"
-    }
-  };
-
+  let backend = JSON.parse(localStorage.getItem('cupboard_v18_backend')) || defaultBackend;
   let lastEstimate = null;
 
   function populateDropdowns() {
@@ -473,19 +467,15 @@
     }
   }
 
-  function updatePreviewImage() {
-    let type = document.getElementById('cabinetType').value;
-    let previewBox = document.getElementById('designPreviewBox');
-    let imgTag = document.getElementById('previewImg');
-    let textTag = document.getElementById('previewText');
-
-    if (designImages[type]) {
-      imgTag.src = designImages[type].url;
-      textTag.innerText = designImages[type].title;
-      previewBox.style.display = 'block';
-    } else {
-      previewBox.style.display = 'none';
-    }
+  // Function to handle image upload from phone gallery
+  function previewUserImage(event) {
+    let reader = new FileReader();
+    reader.onload = function(){
+      let output = document.getElementById('userUploadedImg');
+      output.src = reader.result;
+      output.style.display = 'block';
+    };
+    reader.readAsDataURL(event.target.files[0]);
   }
 
   function autoCalculateHinges() {
@@ -647,7 +637,7 @@
       }
     });
     backend.labourRate = parseFloat(document.getElementById('admin_labourRate').value) || backend.labourRate;
-    localStorage.setItem('cupboard_v17_backend', JSON.stringify(backend));
+    localStorage.setItem('cupboard_v18_backend', JSON.stringify(backend));
     populateDropdowns();
     closeAdmin();
     alert("Rates updated successfully!");
@@ -656,7 +646,7 @@
   window.onload = function() {
     populateDropdowns();
     autoCalculateHinges();
-    updatePreviewImage();
+    toggleKitchenOptions();
   };
 </script>
 
