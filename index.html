@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Golden Star Furniture - Estimator & Visual Preview</title>
+  <title>Golden Star Furniture - Estimator & Admin</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
     :root {
@@ -98,56 +98,6 @@
       padding: 10px; border-radius: 14px; margin-bottom: 10px;
     }
 
-    /* LIVE VISUAL PREVIEW STYLES */
-    .preview-container {
-      background: #2c1810;
-      border-radius: 16px;
-      padding: 15px;
-      margin: 15px 0;
-      text-align: center;
-      color: #fff;
-      border: 2px solid var(--accent);
-    }
-    .preview-title {
-      font-size: 11px; font-weight: 800; color: var(--accent);
-      text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.5px;
-      display: flex; justify-content: center; align-items: center; gap: 6px;
-    }
-    .cabinet-visual-frame {
-      width: 100%;
-      height: 180px;
-      background: #3d2319;
-      border: 3px solid #b87333;
-      border-radius: 8px;
-      display: flex;
-      padding: 6px;
-      gap: 4px;
-      position: relative;
-      box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
-    }
-    .visual-door {
-      flex: 1;
-      background: linear-gradient(135deg, #4e2e22 0%, #2c1810 100%);
-      border: 1px solid #704232;
-      border-radius: 4px;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      padding-right: 6px;
-      position: relative;
-      transition: all 0.3s ease;
-    }
-    .visual-handle {
-      width: 4px;
-      height: 35px;
-      background: #d4af37;
-      border-radius: 2px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.6);
-    }
-    .preview-info {
-      font-size: 10px; color: #d1c2b5; margin-top: 8px; font-weight: 600;
-    }
-
     .btn-calc {
       width: 100%; background: linear-gradient(135deg, #b87333 0%, #2c1810 100%);
       color: #fff; border: none; padding: 14px; border-radius: 14px;
@@ -214,7 +164,7 @@
     @media print {
       body { background: #fff; color: #000; padding: 0; }
       .app-container { box-shadow: none; max-width: 100%; padding: 0; }
-      .header, .section-header, .dim-row, .select-box, .kitchen-section, .btn-calc, .action-btns, .rates-btn, .preview-container { display: none !important; }
+      .header, .section-header, .dim-row, .select-box, .kitchen-section, .btn-calc, .action-btns, .rates-btn { display: none !important; }
       .result-card { display: block !important; background: #fff !important; color: #000 !important; border: 1px solid #000; padding: 10px; margin: 0; }
       .res-row { color: #000 !important; }
       .res-row.highlight { background: #f0f0f0 !important; color: #000 !important; }
@@ -245,7 +195,7 @@
   <div class="section-header"><i class="fa-solid fa-id-card"></i> Select Project Type</div>
   <div class="select-box">
     <label>CABINET / DESIGN TYPE</label>
-    <select id="cabinetType" onchange="toggleKitchenOptions(); adjustDefaultsForType(); updateVisualPreview();">
+    <select id="cabinetType" onchange="toggleKitchenOptions(); adjustDefaultsForType();">
       <option value="wardrobe">Standard Wardrobe (Full Height Cupboard)</option>
       <option value="kitchen">Modular Kitchen Base Unit</option>
       <option value="tvunit">TV Unit / Crockery Display Unit</option>
@@ -293,11 +243,11 @@
   <div class="dim-row">
     <div class="input-box">
       <label>HEIGHT (FT)</label>
-      <input type="number" id="height" value="6" step="0.1" oninput="updateVisualPreview()">
+      <input type="number" id="height" value="6" step="0.1">
     </div>
     <div class="input-box">
       <label>WIDTH (FT)</label>
-      <input type="number" id="width" value="4" step="0.1" oninput="updateVisualPreview()">
+      <input type="number" id="width" value="4" step="0.1">
     </div>
     <div class="input-box">
       <label>DEPTH (FT)</label>
@@ -310,7 +260,7 @@
   <div class="dim-row">
     <div class="input-box">
       <label>NUMBER OF DOORS</label>
-      <input type="number" id="doorCountInput" value="2" min="1" oninput="autoCalculateHinges(); updateVisualPreview();">
+      <input type="number" id="doorCountInput" value="2" min="1" oninput="autoCalculateHinges()">
     </div>
     <div class="input-box">
       <label>CENTER PARTITIONS</label>
@@ -321,19 +271,6 @@
     <div class="input-box">
       <label>NUMBER OF SHELVES</label>
       <input type="number" id="shelvesInput" value="3" min="0">
-    </div>
-  </div>
-
-  <!-- LIVE VISUAL 2D PREVIEW BOX FOR CUSTOMER -->
-  <div class="preview-container">
-    <div class="preview-title">
-      <i class="fa-solid fa-eye"></i> Live Design Preview (Customer View)
-    </div>
-    <div class="cabinet-visual-frame" id="cabinetVisualBox">
-      <!-- Generated via JS -->
-    </div>
-    <div class="preview-info" id="previewInfoText">
-      Standard Wardrobe | 6.0 ft Height x 4.0 ft Width | 2 Shutters
     </div>
   </div>
 
@@ -539,7 +476,7 @@
     adminPin: '1234'
   };
 
-  let backend = JSON.parse(localStorage.getItem('cupboard_v18_backend')) || defaultBackend;
+  let backend = JSON.parse(localStorage.getItem('cupboard_v17_backend')) || defaultBackend;
   backend.labourRate = 300;
 
   let lastEstimate = null;
@@ -562,6 +499,7 @@
 
   function autoCalculateHinges() {
     let doors = parseInt(document.getElementById('doorCountInput').value) || 0;
+    // 1 door = 3 hinges automatically
     let calculatedHinges = doors * 3;
     document.getElementById('hingeCount').value = calculatedHinges;
   }
@@ -580,7 +518,6 @@
     let type = document.getElementById('cabinetType').value;
     if (type === 'kitchen') {
       document.getElementById('height').value = "2.8";
-      document.getElementById('width').value = "4.0";
       document.getElementById('depth').value = "2.0";
       document.getElementById('doorCountInput').value = "2";
       document.getElementById('partitionsInput').value = "1";
@@ -588,7 +525,6 @@
       document.getElementById('drawerCount').value = "2";
     } else if (type === 'tvunit') {
       document.getElementById('height').value = "4.0";
-      document.getElementById('width').value = "5.0";
       document.getElementById('depth').value = "1.0";
       document.getElementById('doorCountInput').value = "2";
       document.getElementById('partitionsInput').value = "2";
@@ -596,7 +532,6 @@
       document.getElementById('drawerCount').value = "1";
     } else {
       document.getElementById('height').value = "6.0";
-      document.getElementById('width').value = "4.0";
       document.getElementById('depth').value = "1.5";
       document.getElementById('doorCountInput').value = "2";
       document.getElementById('partitionsInput').value = "1";
@@ -604,32 +539,6 @@
       document.getElementById('drawerCount').value = "3";
     }
     autoCalculateHinges();
-    updateVisualPreview();
-  }
-
-  // UPDATE LIVE VISUAL PREVIEW BASED ON INPUTS
-  function updateVisualPreview() {
-    let h = parseFloat(document.getElementById('height').value) || 0;
-    let w = parseFloat(document.getElementById('width').value) || 0;
-    let doors = parseInt(document.getElementById('doorCountInput').value) || 1;
-    let type = document.getElementById('cabinetType').value;
-    let typeNames = { wardrobe: "Standard Wardrobe", kitchen: "Modular Kitchen Base Unit", tvunit: "TV Unit / Crockery Unit" };
-
-    let visualBox = document.getElementById('cabinetVisualBox');
-    visualBox.innerHTML = '';
-
-    // Render doors dynamically inside the visual frame
-    let doorCount = Math.max(1, Math.min(doors, 6)); // limit visual doors between 1 and 6 for clean layout
-    for (let i = 0; i < doorCount; i++) {
-      let doorDiv = document.createElement('div');
-      doorDiv.className = 'visual-door';
-      let handle = document.createElement('div');
-      handle.className = 'visual-handle';
-      doorDiv.appendChild(handle);
-      visualBox.appendChild(doorDiv);
-    }
-
-    document.getElementById('previewInfoText').innerText = `${typeNames[type]} | ${h} ft Height x ${w} ft Width | ${doors} Shutters`;
   }
 
   function calculate() {
@@ -880,7 +789,7 @@
     }
 
     backend.hingeRate = parseFloat(document.getElementById('adm_hinge').value) || backend.hingeRate;
-    backend.lockRate = parseFloat(document.getElementById('adm_lock_val') || document.getElementById('adm_lock').value) || backend.lockRate;
+    backend.lockRate = parseFloat(document.getElementById('adm_lock').value) || backend.lockRate;
     backend.fevicolRate = parseFloat(document.getElementById('adm_fev').value) || backend.fevicolRate;
     backend.basketRate = parseFloat(document.getElementById('adm_basket').value) || backend.basketRate;
     backend.chimneyRate = parseFloat(document.getElementById('adm_chimney').value) || backend.chimneyRate;
@@ -891,15 +800,14 @@
       backend.adminPin = newPin;
     }
 
-    localStorage.setItem('cupboard_v18_backend', JSON.stringify(backend));
+    localStorage.setItem('cupboard_v17_backend', JSON.stringify(backend));
     populateDropdowns();
     closeAdmin();
     alert("Sabhi changes successfully save ho gaye hain!");
   }
 
-  // Initial Setup on Page Load
+  // Load initial dropdown values on page load
   populateDropdowns();
-  updateVisualPreview();
 </script>
 
 </body>
