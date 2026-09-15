@@ -123,40 +123,6 @@
       font-size: 11px; color: #d1c2b5; margin-top: 8px; font-weight: 600;
     }
 
-    .gallery-label {
-      font-size: 10px; font-weight: 800; color: var(--accent);
-      margin: 10px 0 6px 0; text-transform: uppercase; letter-spacing: 0.5px;
-    }
-    .gallery-grid {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 6px;
-      scrollbar-width: thin;
-    }
-    .gallery-thumb {
-      width: 60px;
-      height: 50px;
-      border-radius: 6px;
-      overflow: hidden;
-      border: 2px solid #5c4132;
-      cursor: pointer;
-      flex-shrink: 0;
-      opacity: 0.6;
-      transition: all 0.2s ease;
-    }
-    .gallery-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .gallery-thumb.active {
-      border-color: var(--accent);
-      opacity: 1;
-      transform: scale(1.05);
-      box-shadow: 0 4px 10px rgba(184, 115, 51, 0.4);
-    }
-
     .btn-calc {
       width: 100%; background: linear-gradient(135deg, #b87333 0%, #2c1810 100%);
       color: #fff; border: none; padding: 14px; border-radius: 14px;
@@ -251,12 +217,10 @@
       <i class="fa-solid fa-eye"></i> Selected Design Preview
     </div>
     <div class="cabinet-visual-frame" id="cabinetVisualBox">
-      <img id="mainPreviewImg" src="" alt="Design Preview">
+      <!-- Direct embedded source for your photo -->
+      <img id="mainPreviewImg" src="cub.jpg" alt="Wardrobe Design">
     </div>
     <div class="preview-info" id="previewInfoText">Standard Wardrobe | 6.0 ft Height x 4.0 ft Width</div>
-
-    <div class="gallery-label">Tap a design below to change style:</div>
-    <div class="gallery-grid" id="designGalleryGrid"></div>
   </div>
 
   <div class="section-header"><i class="fa-solid fa-layer-group"></i> 2. Materials & Finish</div>
@@ -306,16 +270,6 @@
     mica: { 'Matte Finish (0.8mm)': 60, 'Glossy Finish (0.8mm)': 75 }
   };
 
-  // Pehli design aapki apni bheji hui photo (cub.jpg) hai! 
-  // Jaise-jaise aur photos dein, unhe yahan niche add kar sakte hain.
-  let catalogDesigns = [
-    { id: 1, name: "Modern Grey Wardrobe with Mirror Unit", url: "cub.jpg" },
-    { id: 2, name: "Sample Design 2", url: "https://images.unsplash.com/photo-1558997541-bfc0f210a853?auto=format&fit=crop&w=600&q=80" },
-    { id: 3, name: "Sample Design 3", url: "https://images.unsplash.com/photo-1540518614846-7ede433c4ef0?auto=format&fit=crop&w=600&q=80" }
-  ];
-
-  let selectedDesignUrl = catalogDesigns[0].url;
-
   function populateDropdowns() {
     fillSelect('carcassSelect', backend.carcass, '/sq.ft');
     fillSelect('doorSelect', backend.doors, '/sq.ft');
@@ -335,30 +289,12 @@
     document.getElementById('kitchenAccessoriesSection').style.display = (type === 'kitchen') ? 'block' : 'none';
   }
 
-  function loadGallery() {
-    let grid = document.getElementById('designGalleryGrid');
-    grid.innerHTML = '';
-    catalogDesigns.forEach((item, index) => {
-      let thumb = document.createElement('div');
-      thumb.className = `gallery-thumb ${index === 0 ? 'active' : ''}`;
-      thumb.innerHTML = `<img src="${item.url}" alt="${item.name}">`;
-      thumb.onclick = function() {
-        document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
-        thumb.classList.add('active');
-        selectedDesignUrl = item.url;
-        document.getElementById('mainPreviewImg').src = selectedDesignUrl;
-      };
-      grid.appendChild(thumb);
-    });
-  }
-
   function updateMainPreview() {
     let h = parseFloat(document.getElementById('height').value) || 0;
     let w = parseFloat(document.getElementById('width').value) || 0;
     let type = document.getElementById('cabinetType').value;
     let typeNames = { wardrobe: "Standard Wardrobe", kitchen: "Modular Kitchen Base Unit", tvunit: "TV Unit / Crockery Display Unit" };
 
-    document.getElementById('mainPreviewImg').src = selectedDesignUrl;
     document.getElementById('previewInfoText').innerText = `${typeNames[type]} | ${h} ft Height x ${w} ft Width`;
   }
 
@@ -383,7 +319,6 @@
 
   window.onload = function() {
     populateDropdowns();
-    loadGallery();
     updateMainPreview();
   };
 </script>
