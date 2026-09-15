@@ -1,839 +1,163 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Golden Star Furniture - Estimator & Admin</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <style>
-    :root {
-      --primary: #2c1810;
-      --accent: #b87333;
-      --accent-light: #f5ebe0;
-      --bg: #1a0f0a;
-      --card-bg: #ffffff;
-      --text-main: #2b1a10;
-      --text-muted: #7a685d;
-      --border: #e6ded6;
-    }
-
-    * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
-
-    body {
-      background: linear-gradient(135deg, #2c1810 0%, #0f0805 100%);
-      color: var(--text-main);
-      margin: 0;
-      padding: 15px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .app-container {
-      width: 100%;
-      max-width: 480px;
-      background: var(--card-bg);
-      border-radius: 24px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-      padding: 22px;
-      position: relative;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 15px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .brand { display: flex; align-items: flex-start; gap: 10px; }
-    .brand i {
-      font-size: 20px; color: var(--accent);
-      background: var(--accent-light); padding: 10px; border-radius: 12px;
-      margin-top: 2px;
-    }
-    .brand-title h2 { margin: 0; font-size: 18px; color: var(--primary); font-weight: 800; }
-    .brand-title p { margin: 2px 0 0 0; font-size: 11px; color: var(--text-muted); font-weight: 600; line-height: 1.3; }
-
-    .rates-btn {
-      background: var(--accent-light); color: var(--primary);
-      border: 1px solid #e0cdbc; padding: 8px 12px; border-radius: 20px;
-      font-size: 11px; font-weight: 700; cursor: pointer;
-      display: flex; align-items: center; gap: 6px; white-space: nowrap;
-    }
-
-    .section-header {
-      font-size: 11px; font-weight: 800; letter-spacing: 0.8px;
-      color: var(--accent); text-transform: uppercase;
-      margin: 16px 0 8px 0; display: flex; align-items: center; gap: 6px;
-    }
-
-    .dim-row { display: flex; gap: 10px; margin-bottom: 10px; }
-    
-    .input-box {
-      flex: 1; background: #fdfbf7; border: 1.5px solid var(--border);
-      border-radius: 12px; padding: 8px 12px; transition: all 0.2s;
-    }
-    .input-box label { display: block; font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 2px; }
-    .input-box input, .input-box select {
-      width: 100%; border: none; outline: none; background: transparent;
-      font-size: 13px; font-weight: 700; color: var(--primary);
-    }
-
-    .select-box {
-      width: 100%; background: #fdfbf7; border: 1.5px solid var(--border);
-      border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;
-    }
-    .select-box label { display: block; font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; }
-    .select-box select {
-      width: 100%; border: none; outline: none; background: transparent;
-      font-size: 13px; font-weight: 700; color: var(--primary);
-    }
-
-    .kitchen-section {
-      display: none; background: #fcf8f2; border: 1px dashed var(--accent);
-      padding: 10px; border-radius: 14px; margin-bottom: 10px;
-    }
-
-    .btn-calc {
-      width: 100%; background: linear-gradient(135deg, #b87333 0%, #2c1810 100%);
-      color: #fff; border: none; padding: 14px; border-radius: 14px;
-      font-size: 15px; font-weight: 800; cursor: pointer; margin-top: 15px;
-      box-shadow: 0 6px 18px rgba(184, 115, 51, 0.3);
-      display: flex; justify-content: center; align-items: center; gap: 8px;
-    }
-
-    .result-card {
-      margin-top: 18px; background: #2c1810; color: #fff;
-      border-radius: 16px; padding: 16px; display: none;
-    }
-
-    .res-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; color: #d1c2b5; }
-    .res-row.highlight { color: #f5ebe0; font-weight: 700; background: rgba(255,255,255,0.05); padding: 4px 6px; border-radius: 6px; }
-    .hw-subrow { font-size: 11px; color: #a89485; padding-left: 10px; margin-bottom: 3px; display: flex; justify-content: space-between; }
-    
-    .sheet-badge { 
-      background: #3d2319; 
-      border: 1px solid #5c4132; 
-      padding: 10px; 
-      border-radius: 10px; 
-      margin: 10px 0; 
-    }
-
-    .res-total {
-      border-top: 1px dashed #5c4132; margin-top: 10px; padding-top: 10px;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .res-total h3 { margin: 0; font-size: 20px; color: var(--accent); font-weight: 800; }
-
-    .action-btns { display: flex; gap: 8px; margin-top: 12px; }
-    .whatsapp-btn {
-      flex: 1; background: #25D366; color: #fff; border: none;
-      padding: 11px; border-radius: 10px; font-size: 12px; font-weight: 700;
-      cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px;
-    }
-    .pdf-btn {
-      flex: 1; background: #e63946; color: #fff; border: none;
-      padding: 11px; border-radius: 10px; font-size: 12px; font-weight: 700;
-      cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px;
-    }
-
-    .modal {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.75); justify-content: center; align-items: center;
-      z-index: 100; backdrop-filter: blur(4px);
-    }
-    .modal-content {
-      background: #fff; padding: 20px; border-radius: 18px;
-      width: 92%; max-width: 440px; max-height: 88vh; overflow-y: auto;
-    }
-    .admin-group { margin-bottom: 10px; }
-    .admin-group label { font-size: 11px; font-weight: 700; color: var(--primary); }
-    .admin-group input, .admin-group select { width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 8px; margin-top: 2px; }
-    
-    .mat-edit-row {
-      display: flex; align-items: center; gap: 8px; margin-bottom: 6px; background: #fdfbf7; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border);
-    }
-    .mat-edit-row span { flex: 1; font-size: 11px; font-weight: 700; color: var(--primary); }
-    .mat-edit-row input { width: 70px; padding: 4px 6px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; font-weight: 700; text-align: right; }
-    .del-btn { color: #d9534f; cursor: pointer; font-size: 13px; padding: 4px; }
-
-    @media print {
-      body { background: #fff; color: #000; padding: 0; }
-      .app-container { box-shadow: none; max-width: 100%; padding: 0; }
-      .header, .section-header, .dim-row, .select-box, .kitchen-section, .btn-calc, .action-btns, .rates-btn { display: none !important; }
-      .result-card { display: block !important; background: #fff !important; color: #000 !important; border: 1px solid #000; padding: 10px; margin: 0; }
-      .res-row { color: #000 !important; }
-      .res-row.highlight { background: #f0f0f0 !important; color: #000 !important; }
-      .sheet-badge { background: #f9f9f9 !important; border: 1px solid #000 !important; color: #000 !important; }
-      .sheet-badge strong { color: #000 !important; }
-      .hw-subrow { color: #333 !important; }
-      .res-total h3 { color: #000 !important; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Star Furniture & Interior - Estimator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #2b2b2b;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        h2, h3 {
+            color: #d4af37;
+        }
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #333;
+            border-radius: 8px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #ccc;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #222;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 6px;
+        }
+        /* Blueprint Canvas Box Styling */
+        .blueprint-box {
+            background: #111;
+            border: 2px dashed #d4af37;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            margin-top: 15px;
+        }
+        canvas {
+            background: #000;
+            border-radius: 6px;
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
 
-<div class="app-container">
-  <div class="header">
-    <div class="brand">
-      <i class="fa-solid fa-couch"></i>
-      <div class="brand-title">
-        <h2>Golden Star Furniture</h2>
-        <p>📍 Xchange Road Lalchowk, Near Aadhar Center<br>📞 7006688390</p>
-      </div>
-    </div>
-    <button class="rates-btn" onclick="openAdminWithPin()">
-      <i class="fa-solid fa-lock"></i> Admin
-    </button>
-  </div>
+<div class="container">
+    <h2>Golden Star Furniture & Interior</h2>
+    <p>📞 700668839 | Lalchowk, Srinagar</p>
 
-  <!-- Cabinet / Design Type Selection -->
-  <div class="section-header"><i class="fa-solid fa-id-card"></i> Select Project Type</div>
-  <div class="select-box">
-    <label>CABINET / DESIGN TYPE</label>
-    <select id="cabinetType" onchange="toggleKitchenOptions(); adjustDefaultsForType();">
-      <option value="wardrobe">Standard Wardrobe (Full Height Cupboard)</option>
-      <option value="kitchen">Modular Kitchen Base Unit</option>
-      <option value="tvunit">TV Unit / Crockery Display Unit</option>
-    </select>
-  </div>
-
-  <!-- KITCHEN EXCLUSIVE ACCESSORIES -->
-  <div class="kitchen-section" id="kitchenAccessoriesSection">
-    <div style="font-size:11px; font-weight:800; color:var(--accent); margin-bottom:8px; text-transform:uppercase;">
-      <i class="fa-solid fa-kitchen-set"></i> Modular Kitchen Baskets & Appliances
-    </div>
-    <div class="dim-row">
-      <div class="input-box">
-        <label>SS WIRE BASKETS (PCS)</label>
-        <input type="number" id="kitchenBaskets" value="3" min="0">
-      </div>
-      <div class="input-box">
-        <label>BOTTLE PULL-OUT</label>
-        <select id="bottlePullout">
-          <option value="0">None</option>
-          <option value="1" selected>1 Unit (Spice/Bottle)</option>
-        </select>
-      </div>
-    </div>
-    <div class="dim-row">
-      <div class="input-box">
-        <label>CHIMNEY INCLUDED?</label>
-        <select id="hasChimney">
-          <option value="0">No Chimney</option>
-          <option value="1" selected>Yes (Standard Wall Hood)</option>
-        </select>
-      </div>
-      <div class="input-box">
-        <label>BUILT-IN HOB?</label>
-        <select id="hasHob">
-          <option value="0">No Hob</option>
-          <option value="1">Yes (Built-in Glass Hob)</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <!-- 1. Dimensions -->
-  <div class="section-header"><i class="fa-solid fa-ruler-combined"></i> 1. Outer Dimensions</div>
-  <div class="dim-row">
-    <div class="input-box">
-      <label>HEIGHT (FT)</label>
-      <input type="number" id="height" value="6" step="0.1">
-    </div>
-    <div class="input-box">
-      <label>WIDTH (FT)</label>
-      <input type="number" id="width" value="4" step="0.1">
-    </div>
-    <div class="input-box">
-      <label>DEPTH (FT)</label>
-      <input type="number" id="depth" value="1.5" step="0.1">
-    </div>
-  </div>
-
-  <!-- 2. Internal Setup & Doors -->
-  <div class="section-header"><i class="fa-solid fa-table-cells"></i> 2. Doors, Partitions & Shelves</div>
-  <div class="dim-row">
-    <div class="input-box">
-      <label>NUMBER OF DOORS</label>
-      <input type="number" id="doorCountInput" value="2" min="1" oninput="autoCalculateHinges()">
-    </div>
-    <div class="input-box">
-      <label>CENTER PARTITIONS</label>
-      <input type="number" id="partitionsInput" value="1" min="0">
-    </div>
-  </div>
-  <div class="dim-row">
-    <div class="input-box">
-      <label>NUMBER OF SHELVES</label>
-      <input type="number" id="shelvesInput" value="3" min="0">
-    </div>
-  </div>
-
-  <!-- 3. Material, Mica & Liner Selection -->
-  <div class="section-header"><i class="fa-solid fa-layer-group"></i> 3. Materials, Outer & Liner Mica</div>
-  <div class="select-box">
-    <label>INNER STRUCTURE / CARCASS (18mm)</label>
-    <select id="carcassSelect"></select>
-  </div>
-  <div class="select-box">
-    <label>DOORS / SHUTTERS BOARD</label>
-    <select id="doorSelect"></select>
-  </div>
-  <div class="select-box">
-    <label>OUTER MICA FINISH</label>
-    <select id="micaSelect"></select>
-  </div>
-  <div class="select-box">
-    <label>LINER MICA (INNER WALLS & SHELVES)</label>
-    <select id="linerMicaSelect"></select>
-  </div>
-  <div class="select-box">
-    <label>BACKING SHEET (6mm/8mm)</label>
-    <select id="backSelect"></select>
-  </div>
-
-  <!-- 4. Exact Hardware & Adhesives -->
-  <div class="section-header"><i class="fa-solid fa-screwdriver-wrench"></i> 4. Hardware & Adhesives Details</div>
-  
-  <div class="dim-row">
-    <div class="input-box">
-      <label>FEVICOL (KG)</label>
-      <input type="number" id="fevicolKgInput" value="3" min="0" step="0.5">
-    </div>
-    <div class="input-box">
-      <label>HEATX (KG)</label>
-      <input type="number" id="heatxKgInput" value="1" min="0" step="0.5">
-    </div>
-  </div>
-
-  <div class="dim-row">
-    <div class="input-box">
-      <label>HINGES / KABZE (PCS) [Auto: 3 per door]</label>
-      <input type="number" id="hingeCount" value="6" min="0">
-    </div>
-    <div class="input-box">
-      <label>LOCKS NEEDED (PCS)</label>
-      <input type="number" id="lockCount" value="1" min="0">
-    </div>
-    <div class="input-box">
-      <label>DRAWERS NEEDED</label>
-      <input type="number" id="drawerCount" value="2" min="0">
-    </div>
-  </div>
-
-  <button class="btn-calc" onclick="calculate()">
-    <i class="fa-solid fa-calculator"></i> Calculate Exact Estimate
-  </button>
-
-  <!-- RESULT CARD -->
-  <div class="result-card" id="resultCard">
-    <div style="text-align:center; margin-bottom:10px; border-bottom:1px solid #5c4132; padding-bottom:6px;">
-      <h3 style="margin:0; font-size:16px; color:var(--accent);">GOLDEN STAR FURNITURE</h3>
-      <p style="margin:2px 0 0 0; font-size:10px; color:#d1c2b5;">Official Project Quotation Summary</p>
-    </div>
-    <div class="res-row"><span>Project Type:</span><strong id="projTypeText">Standard Wardrobe</strong></div>
-    <div class="res-row"><span>Front Size:</span><strong id="sqftText">0 Sq. Ft.</strong></div>
-    <div class="res-row highlight"><span>1 Single Shelf Size:</span><strong id="singleShelfText">0 Ft x 0 Ft</strong></div>
-    <div class="res-row highlight"><span>Total Shelves Area:</span><strong id="totalShelvesAreaText">0 Sq. Ft.</strong></div>
-    <div class="res-row highlight"><span>Total Carcass Area:</span><strong id="carcassSqftText">0 Sq. Ft.</strong></div>
-
-    <!-- WORKSHOP SHEET REQUIREMENT (8x4 Feet Sheets) -->
-    <div class="sheet-badge">
-      <div style="font-size:10px; font-weight:800; color:var(--accent); margin-bottom:4px; text-transform:uppercase;"><i class="fa-solid fa-warehouse"></i> Workshop Sheet Count (8x4 ft)</div>
-      <div class="res-row"><span>• Plywood Sheets (Carcass):</span><strong id="plywoodSheetsText" style="color:#fff;">0 Sheets</strong></div>
-      <div class="res-row"><span>• Doors / Shutters Board:</span><strong id="doorSheetsText" style="color:#fff;">0 Sheets</strong></div>
-      <div class="res-row"><span>• Outer Mica Sheets:</span><strong id="micaSheetsText" style="color:#fff;">0 Sheets</strong></div>
-      <div class="res-row"><span>• Inner Liner Mica Sheets:</span><strong id="linerSheetsText" style="color:#fff;">0 Sheets</strong></div>
-      <div class="res-row"><span>• Backing Sheet (6mm):</span><strong id="backSheetsText" style="color:#fff;">0 Sheets</strong></div>
+    <!-- 1. Outer Dimensions -->
+    <div class="section">
+        <h3>1. Outer Dimensions</h3>
+        <label>Height (ft)</label>
+        <input type="number" id="height" value="6" oninput="drawBlueprint()">
+        
+        <label>Width (ft)</label>
+        <input type="number" id="width" value="4" oninput="drawBlueprint()">
+        
+        <label>Depth (ft)</label>
+        <input type="number" id="depth" value="1.5" oninput="drawBlueprint()">
     </div>
 
-    <div style="border-top:1px solid #4a3427; margin:10px 0; padding-top:6px;"></div>
-    
-    <div class="res-row"><span>Inner Structure Board Cost:</span><span id="carcassCostText">₹0</span></div>
-    <div class="res-row"><span>Shutters Board Cost:</span><span id="doorCostText">₹0</span></div>
-    <div class="res-row"><span>Outer Mica Cost:</span><span id="micaCostText">₹0</span></div>
-    <div class="res-row"><span>Liner Mica (Inner) Cost:</span><span id="linerMicaCostText">₹0</span></div>
-    <div class="res-row"><span>Back Ply Cost:</span><span id="backCostText">₹0</span></div>
-    <div class="res-row" style="color:#f5ebe0; font-weight:700;"><span>Labour Charges (@ ₹<span id="labourRateText">300</span>/Sq.Ft):</span><span id="labourCostText">₹0</span></div>
+    <!-- 2. Doors & Shelves -->
+    <div class="section">
+        <h3>2. Doors, Partitions & Shelves</h3>
+        <label>Number of Doors</label>
+        <input type="number" id="doors" value="4" oninput="drawBlueprint()">
+        
+        <label>Number of Shelves</label>
+        <input type="number" id="shelves" value="3" oninput="drawBlueprint()">
 
-    <!-- Hardware & Kitchen Accessories Breakdown -->
-    <div class="res-row" style="color:var(--accent); font-weight:700; margin-top:8px;"><span>Hardware & Accessories Cost:</span><span id="hwTotalText">₹0</span></div>
-    <div class="hw-subrow"><span>• Hinges/Kabze (<span id="hingeQtyText">0</span> Pcs @ ₹<span id="hingeRateText">250</span>):</span><span id="hingeCostText">₹0</span></div>
-    <div class="hw-subrow"><span>• Locks (<span id="lockQtyText">0</span> Pcs @ ₹<span id="lockRateText">300</span>):</span><span id="lockCostText">₹0</span></div>
-    <div class="hw-subrow"><span>• Fevicol & HeatX Glue:</span><span id="glueCostText">₹0</span></div>
-    <div class="hw-subrow"><span>• Edge Banding & Extra Hardware:</span><span id="extraHwCostText">₹0</span></div>
-    <div class="hw-subrow" id="kitchenAccessoriesRow" style="display:none; color:#f5ebe0;"><span>• Kitchen Baskets/Chimney/Hob:</span><span id="kitchenAccessoriesCostText">₹0</span></div>
-
-    <div class="res-row" style="margin-top:6px;"><span>Extra Drawers Charge:</span><span id="drawerCostText">₹0</span></div>
-
-    <div class="res-total">
-      <span>Estimated Total</span>
-      <h3 id="totalText">₹0</h3>
+        <!-- Live Design Blueprint Preview Box -->
+        <div class="blueprint-box">
+            <h4 style="color: #d4af37; margin: 5px 0 10px 0;">Live Design Blueprint Preview</h4>
+            <canvas id="wardrobeCanvas" width="400" height="350"></canvas>
+        </div>
     </div>
-
-    <div class="action-btns">
-      <button class="whatsapp-btn" onclick="shareWhatsApp()">
-        <i class="fa-brands fa-whatsapp"></i> WhatsApp
-      </button>
-      <button class="pdf-btn" onclick="downloadPDF()">
-        <i class="fa-solid fa-file-pdf"></i> Download PDF
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Admin Modal -->
-<div class="modal" id="adminModal">
-  <div class="modal-content">
-    <h3 style="color:var(--primary); margin-top:0;">Admin Panel - Material & Rates</h3>
-    
-    <div style="border-bottom:1px solid #e0cdbc; padding-bottom:12px; margin-bottom:12px;">
-      <h4 style="margin:0 0 8px 0; color:var(--accent);"><i class="fa-solid fa-pen-to-square"></i> Edit Material & Mica Rates (₹ / Sq.Ft)</h4>
-      <div id="materialRatesForm"></div>
-    </div>
-
-    <div style="border-bottom:1px solid #e0cdbc; padding-bottom:12px; margin-bottom:12px;">
-      <h4 style="margin:0 0 8px 0; color:var(--accent);"><i class="fa-solid fa-wrench"></i> Hardware & Kitchen Accessory Rates</h4>
-      <div id="adminForm"></div>
-    </div>
-
-    <div style="border-bottom:1px solid #e0cdbc; padding-bottom:12px; margin-bottom:12px;">
-      <h4 style="margin:0 0 8px 0; color:var(--accent);"><i class="fa-solid fa-plus-circle"></i> Add New Option</h4>
-      <div class="admin-group">
-        <label>Category</label>
-        <select id="newMatCategory">
-          <option value="carcass">Inner Structure (Carcass)</option>
-          <option value="doors">Doors / Shutters Board</option>
-          <option value="mica">Outer Mica Finish</option>
-          <option value="linerMica">Liner Mica (Inner)</option>
-          <option value="backing">Backing Sheet</option>
-        </select>
-      </div>
-      <div class="admin-group">
-        <label>Name / Quality</label>
-        <input type="text" id="newMatName" placeholder="e.g. White Liner Mica">
-      </div>
-      <div class="admin-group">
-        <label>Rate Per Sq. Ft. (₹)</label>
-        <input type="number" id="newMatRate" placeholder="e.g. 45">
-      </div>
-      <button class="rates-btn" style="width:100%; background:#2c1810; color:#fff; justify-content:center; margin-top:5px;" onclick="addNewMaterial()">
-        + Add Option
-      </button>
-    </div>
-
-    <div>
-      <h4 style="margin:0 0 8px 0; color:var(--accent);"><i class="fa-solid fa-key"></i> Change Admin PIN</h4>
-      <div class="admin-group">
-        <label>New PIN Code</label>
-        <input type="password" id="newPinCode" placeholder="Enter new PIN">
-      </div>
-    </div>
-
-    <button class="btn-calc" onclick="saveRates()" style="margin-top:15px;">Save All Changes</button>
-    <button class="rates-btn" style="width:100%; margin-top:8px; justify-content:center;" onclick="closeAdmin()">Cancel</button>
-  </div>
 </div>
 
 <script>
-  let defaultBackend = {
-    carcass: { '18mm Commercial Ply': 110, '18mm HDMR Board': 125, '18mm Marine Ply': 145 },
-    doors: { '19mm Pine Blockboard': 130, '18mm HDMR Door': 120, '18mm Commercial Ply': 110 },
-    mica: { 
-      'Matte Finish (0.8mm)': 60, 
-      'Matte Finish (1.0mm)': 85, 
-      'Glossy Finish (0.8mm)': 75, 
-      'Glossy Finish (1.0mm)': 105, 
-      'Texture Finish (0.8mm)': 80, 
-      'Texture Finish (1.0mm)': 115 
-    },
-    linerMica: {
-      'White Liner Mica (Standard)': 42,
-      'Woodgrain Liner Mica': 50,
-      'Premium Inner Mica': 60
-    },
-    backing: { '6mm Commercial Back Ply': 30, '6mm Marine Back Ply': 45, '8mm HDMR Backing': 50 },
+function drawBlueprint() {
+    const canvas = document.getElementById('wardrobeCanvas');
+    const ctx = canvas.getContext('2d');
     
-    labourRate: 300,        
-    hingeRate: 250,         
-    lockRate: 300,          
-    fevicolRate: 600,       
-    heatxRate: 600,
-    edgeBandingRate: 300,  
-    extraHardwareFixed: 1000,
-    extraDrawerRate: 800,
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    basketRate: 1500,       
-    bottlePulloutRate: 3500,
-    chimneyRate: 8500,      
-    hobRate: 11000,         
-
-    adminPin: '1234'
-  };
-
-  let backend = JSON.parse(localStorage.getItem('cupboard_v18_backend')) || defaultBackend;
-  backend.labourRate = 300;
-
-  let lastEstimate = null;
-
-  function populateDropdowns() {
-    fillSelect('carcassSelect', backend.carcass, '/sq.ft');
-    fillSelect('doorSelect', backend.doors, '/sq.ft');
-    fillSelect('micaSelect', backend.mica, '/sq.ft');
-    fillSelect('linerMicaSelect', backend.linerMica, '/sq.ft');
-    fillSelect('backSelect', backend.backing, '/sq.ft');
-  }
-
-  function fillSelect(elementId, dataset, suffix) {
-    let select = document.getElementById(elementId);
-    select.innerHTML = '';
-    for (let k in dataset) {
-      select.innerHTML += `<option value="${k}">${k} (₹${dataset[k]}${suffix})</option>`;
-    }
-  }
-
-  function autoCalculateHinges() {
-    let doors = parseInt(document.getElementById('doorCountInput').value) || 0;
-    let calculatedHinges = doors * 3;
-    document.getElementById('hingeCount').value = calculatedHinges;
-  }
-
-  function toggleKitchenOptions() {
-    let type = document.getElementById('cabinetType').value;
-    let kitchenSection = document.getElementById('kitchenAccessoriesSection');
-    if (type === 'kitchen') {
-      kitchenSection.style.display = 'block';
-    } else {
-      kitchenSection.style.display = 'none';
-    }
-  }
-
-  function adjustDefaultsForType() {
-    let type = document.getElementById('cabinetType').value;
-    if (type === 'kitchen') {
-      document.getElementById('height').value = "2.8";
-      document.getElementById('depth').value = "2.0";
-      document.getElementById('doorCountInput').value = "2";
-      document.getElementById('partitionsInput').value = "1";
-      document.getElementById('shelvesInput').value = "1";
-      document.getElementById('drawerCount').value = "2";
-    } else if (type === 'tvunit') {
-      document.getElementById('height').value = "4.0";
-      document.getElementById('depth').value = "1.0";
-      document.getElementById('doorCountInput').value = "2";
-      document.getElementById('partitionsInput').value = "2";
-      document.getElementById('shelvesInput').value = "3";
-      document.getElementById('drawerCount').value = "1";
-    } else {
-      document.getElementById('height').value = "6.0";
-      document.getElementById('depth').value = "1.5";
-      document.getElementById('doorCountInput').value = "2";
-      document.getElementById('partitionsInput').value = "1";
-      document.getElementById('shelvesInput').value = "3";
-      document.getElementById('drawerCount').value = "3";
-    }
-    autoCalculateHinges();
-  }
-
-  function calculate() {
-    let type = document.getElementById('cabinetType').value;
-    let typeNames = { wardrobe: "Standard Wardrobe", kitchen: "Modular Kitchen Base Unit", tvunit: "TV Unit / Crockery Unit" };
+    // Get values
+    const heightVal = parseFloat(document.getElementById('height').value) || 6;
+    const widthVal = parseFloat(document.getElementById('width').value) || 4;
+    const numDoors = parseInt(document.getElementById('doors').value) || 2;
+    const numShelves = parseInt(document.getElementById('shelves').value) || 3;
     
-    let h = parseFloat(document.getElementById('height').value) || 0;
-    let w = parseFloat(document.getElementById('width').value) || 0;
-    let d = parseFloat(document.getElementById('depth').value) || 0;
+    // Wardrobe Outer Box Frame
+    const x = 50, y = 30, w = 300, h = 280;
     
-    let numDoors = parseInt(document.getElementById('doorCountInput').value) || 0;
-    let numPartitions = parseInt(document.getElementById('partitionsInput').value) || 0;
-    let numShelves = parseInt(document.getElementById('shelvesInput').value) || 0;
-    let numHinges = parseInt(document.getElementById('hingeCount').value) || 0;
-    let numLocks = parseInt(document.getElementById('lockCount').value) || 0;
-    let drawers = parseInt(document.getElementById('drawerCount').value) || 0;
-
-    let fevicolKg = parseFloat(document.getElementById('fevicolKgInput').value) || 0;
-    let heatxKg = parseFloat(document.getElementById('heatxKgInput').value) || 0;
-
-    if (h <= 0 || w <= 0 || d <= 0) {
-      alert("Height, Width aur Depth sahi enter karein!");
-      return;
-    }
-
-    let frontSqft = h * w;
-
-    let outerSides = 2 * (h * d);          
-    let outerTopBottom = 2 * (w * d);      
-    let innerPartitionsArea = numPartitions * (h * d); 
-
-    let shelfLength = numPartitions > 0 ? (w / (numPartitions + 1)) : w;
-    let singleShelfSqft = shelfLength * d;
-    let totalShelvesArea = numShelves * singleShelfSqft;
-
-    let extraFramesWastage = (h * w) * 0.12; 
-    let totalCarcassSqft = outerSides + outerTopBottom + innerPartitionsArea + totalShelvesArea + extraFramesWastage;
-
-    let innerWallsLinerArea = (2 * (h * d)) + (2 * (w * d)); 
-    let partitionsLinerArea = numPartitions * (h * d) * 2;    
-    let shelvesLinerArea = numShelves * singleShelfSqft * 2;    
-    let drawersLinerArea = drawers * 12; 
-    let totalLinerMicaSqft = innerWallsLinerArea + partitionsLinerArea + shelvesLinerArea + drawersLinerArea;
-
-    let plywoodSheetsCount = Math.ceil((totalCarcassSqft + (frontSqft * 0.8)) * 1.15 / 32);
-    let doorSheetsCount = Math.ceil((frontSqft * 1.12) / 32); 
-    let outerMicaSheetsCount = Math.ceil((frontSqft * 1.12) / 32);
-    let linerMicaSheetsCount = Math.ceil((totalLinerMicaSqft * 1.15) / 32); 
-    let backSheetsCount = Math.ceil((frontSqft * 1.08) / 32);
-
-    let labourCost = frontSqft * backend.labourRate;
-    let hingeCost = numHinges * backend.hingeRate;
-    let lockCost = numLocks * backend.lockRate;
-
-    let fevicolCost = fevicolKg * (backend.fevicolRate || 600);
-    let heatxCost = heatxKg * (backend.heatxRate || 600);
-    let glueTotalCost = fevicolCost + heatxCost;
-
-    let edgeCost = backend.edgeBandingRate; 
-    let extraHwCost = backend.extraHardwareFixed;
-
-    let kitchenAccCost = 0;
-    if (type === 'kitchen') {
-      let basketsCount = parseInt(document.getElementById('kitchenBaskets').value) || 0;
-      let bottlePulloutCount = parseInt(document.getElementById('bottlePullout').value) || 0;
-      let chimneyCount = parseInt(document.getElementById('hasChimney').value) || 0;
-      let hobCount = parseInt(document.getElementById('hasHob').value) || 0;
-
-      kitchenAccCost = (basketsCount * (backend.basketRate || 1500)) +
-                       (bottlePulloutCount * (backend.bottlePulloutRate || 3500)) +
-                       (chimneyCount * (backend.chimneyRate || 8500)) +
-                       (hobCount * (backend.hobRate || 11000));
-    }
-
-    let totalHardwareCost = hingeCost + lockCost + glueTotalCost + edgeCost + extraHwCost + kitchenAccCost;
-
-    let carcassName = document.getElementById('carcassSelect').value;
-    let doorName = document.getElementById('doorSelect').value;
-    let micaName = document.getElementById('micaSelect').value;
-    let linerMicaName = document.getElementById('linerMicaSelect').value;
-    let backName = document.getElementById('backSelect').value;
-
-    let carcassRate = backend.carcass[carcassName] || 0;
-    let doorRate = backend.doors[doorName] || 0;
-    let micaRate = backend.mica[micaName] || 0;
-    let linerMicaRate = backend.linerMica[linerMicaName] || 0;
-    let backRate = backend.backing[backName] || 0;
-
-    // Workshop Sheet-Based Cost Calculation (Prevents Carpenter Loss)
-    let carcassTotalCost = plywoodSheetsCount * 32 * carcassRate;
-    let doorTotalCost = doorSheetsCount * 32 * doorRate;
-    let micaTotalCost = outerMicaSheetsCount * 32 * micaRate;
-    let linerMicaTotalCost = linerMicaSheetsCount * 32 * linerMicaRate; 
-    let backTotalCost = backSheetsCount * 32 * backRate;
-
-    let extraDrawers = drawers > 3 ? (drawers - 3) : 0;
-    let drawerTotalCost = extraDrawers * backend.extraDrawerRate;
-
-    let grandTotal = carcassTotalCost + doorTotalCost + micaTotalCost + linerMicaTotalCost + backTotalCost + labourCost + totalHardwareCost + drawerTotalCost;
-
-    document.getElementById('projTypeText').innerText = typeNames[type] || "Standard Wardrobe";
-    document.getElementById('sqftText').innerText = `${frontSqft.toFixed(1)} Sq. Ft.`;
-    document.getElementById('singleShelfText').innerText = `${shelfLength.toFixed(1)}ft x ${d}ft (${singleShelfSqft.toFixed(1)} Sq.Ft)`;
-    document.getElementById('totalShelvesAreaText').innerText = `${numShelves} Shelves = ${totalShelvesArea.toFixed(1)} Sq. Ft.`;
-    document.getElementById('carcassSqftText').innerText = `${Math.round(totalCarcassSqft)} Sq. Ft.`;
-
-    document.getElementById('plywoodSheetsText').innerText = `${plywoodSheetsCount} Sheets (8x4)`;
-    document.getElementById('doorSheetsText').innerText = `${doorSheetsCount} Sheets (8x4)`;
-    document.getElementById('micaSheetsText').innerText = `${outerMicaSheetsCount} Sheets (8x4)`;
-    document.getElementById('linerSheetsText').innerText = `${linerMicaSheetsCount} Sheets (8x4)`;
-    document.getElementById('backSheetsText').innerText = `${backSheetsCount} Sheets (8x4)`;
-
-    document.getElementById('carcassCostText').innerText = `₹${Math.round(carcassTotalCost)}`;
-    document.getElementById('doorCostText').innerText = `₹${Math.round(doorTotalCost)}`;
-    document.getElementById('micaCostText').innerText = `₹${Math.round(micaTotalCost)}`;
-    document.getElementById('linerMicaCostText').innerText = `₹${Math.round(linerMicaTotalCost)}`;
-    document.getElementById('backCostText').innerText = `₹${Math.round(backTotalCost)}`;
-
-    document.getElementById('labourRateText').innerText = backend.labourRate;
-    document.getElementById('labourCostText').innerText = `₹${Math.round(labourCost)}`;
-
-    document.getElementById('hwTotalText').innerText = `₹${Math.round(totalHardwareCost)}`;
-    document.getElementById('hingeQtyText').innerText = numHinges;
-    document.getElementById('hingeRateText').innerText = backend.hingeRate;
-    document.getElementById('hingeCostText').innerText = `₹${hingeCost}`;
-
-    document.getElementById('glueCostText').innerText = `₹${glueTotalCost}`;
-    document.getElementById('extraHwCostText').innerText = `₹${edgeCost + extraHwCost}`;
-
-    let kitchenAccRow = document.getElementById('kitchenAccessoriesRow');
-    if (type === 'kitchen' && kitchenAccCost > 0) {
-      kitchenAccRow.style.display = 'flex';
-      document.getElementById('kitchenAccessoriesCostText').innerText = `₹${kitchenAccCost}`;
-    } else {
-      kitchenAccRow.style.display = 'none';
-    }
-
-    document.getElementById('drawerCostText').innerText = extraDrawers > 0 ? `₹${drawerTotalCost} (${extraDrawers} extra)` : `₹0 (Included)`;
-    document.getElementById('totalText').innerText = `₹${Math.round(grandTotal)}`;
-
-    document.getElementById('resultCard').style.display = 'block';
-
-    lastEstimate = { type: typeNames[type], h, w, d, frontSqft, plywoodSheetsCount, doorSheetsCount, outerMicaSheetsCount, linerMicaSheetsCount, backSheetsCount, kitchenAccCost, grandTotal };
-  }
-
-  function downloadPDF() {
-    window.print();
-  }
-
-  function shareWhatsApp() {
-    if (!lastEstimate) return;
-    let text = `*GOLDEN STAR FURNITURE*%0A` +
-      `📍 _Xchange Road Lalchowk, Near Aadhar Center_%0A` +
-      `📞 _Phone: 7006688390_%0A` +
-      `----------------------------%0A` +
-      `📋 *${lastEstimate.type.toUpperCase()} QUOTATION*%0A` +
-      `----------------------------%0A` +
-      `📏 *Size:* ${lastEstimate.h}ft x ${lastEstimate.w}ft (Depth: ${lastEstimate.d}ft)%0A` +
-      `📐 *Front Area:* ${lastEstimate.frontSqft.toFixed(1)} Sq.Ft%0A` +
-      `📦 *Material Sheets (8x4):*%0A` +
-      `  • Plywood (Carcass): ${lastEstimate.plywoodSheetsCount} Sheets%0A` +
-      `  • Doors / Shutters: ${lastEstimate.doorSheetsCount} Sheets%0A` +
-      `  • Outer Mica: ${lastEstimate.outerMicaSheetsCount} Sheets%0A` +
-      `  • Liner Mica: ${lastEstimate.linerMicaSheetsCount} Sheets%0A` +
-      `  • Backing Sheet: ${lastEstimate.backSheetsCount} Sheets%0A` +
-      (lastEstimate.kitchenAccCost > 0 ? `  • Kitchen Accessories & Appliances Included%0A` : ``) +
-      `----------------------------%0A` +
-      `     💰 *Estimated Total:* *₹${Math.round(lastEstimate.grandTotal).toLocaleString('en-IN')}*%0A` +
-      `----------------------------%0A` +
-      `_Thank you for choosing Golden Star Furniture!_`;
-
-    window.open(`https://wa.me/?text=${text}`, '_blank');
-  }
-
-  function openAdminWithPin() {
-    let pin = prompt("Enter Admin PIN (Default is 1234):");
-    if (pin === backend.adminPin) {
-      renderAdminForm();
-      document.getElementById('adminModal').style.display = 'flex';
-    } else if (pin !== null) {
-      alert("Galat PIN! Access denied.");
-    }
-  }
-
-  function closeAdmin() {
-    document.getElementById('adminModal').style.display = 'none';
-  }
-
-  function renderAdminForm() {
-    let materialContainer = document.getElementById('materialRatesForm');
-    materialContainer.innerHTML = '';
+    // Draw Outer Carcass
+    ctx.strokeStyle = '#d4af37';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(x, y, w, h);
     
-    let categories = [
-      { key: 'carcass', title: 'Carcass Plywood / Boards' },
-      { key: 'doors', title: 'Door Boards' },
-      { key: 'mica', title: 'Outer Mica' },
-      { key: 'linerMica', title: 'Liner Mica (Inner)' },
-      { key: 'backing', title: 'Backing Sheets' }
-    ];
-
-    categories.forEach(cat => {
-      materialContainer.innerHTML += `<div style="font-size:11px; font-weight:800; color:var(--primary); margin:6px 0 2px 0;">${cat.title}</div>`;
-      for (let k in backend[cat.key]) {
-        materialContainer.innerHTML += `
-          <div class="mat-edit-row">
-            <span>${k}</span>
-            <input type="number" id="rate_${cat.key}_${k}" value="${backend[cat.key][k]}">
-            <span style="font-size:10px; color:var(--text-muted);">₹/sqft</span>
-            <i class="fa-solid fa-trash del-btn" onclick="deleteMaterial('${cat.key}', '${k}')" title="Delete"></i>
-          </div>
-        `;
-      }
-    });
-
-    let hardwareContainer = document.getElementById('adminForm');
-    hardwareContainer.innerHTML = `
-      <div class="admin-group"><label>Labour Rate (₹/Sq.Ft)</label><input type="number" id="admin_labourRate" value="${backend.labourRate}"></div>
-      <div class="admin-group"><label>Hinges Rate per Pcs (₹)</label><input type="number" id="admin_hingeRate" value="${backend.hingeRate}"></div>
-      <div class="admin-group"><label>Lock Rate per Pcs (₹)</label><input type="number" id="admin_lockRate" value="${backend.lockRate}"></div>
-      <div class="admin-group"><label>Fevicol Rate per Kg (₹)</label><input type="number" id="admin_fevicolRate" value="${backend.fevicolRate || 600}"></div>
-      <div class="admin-group"><label>HeatX Rate per Kg (₹)</label><input type="number" id="admin_heatxRate" value="${backend.heatxRate || 600}"></div>
-      <div class="admin-group"><label>Kitchen Wire Basket Rate (₹)</label><input type="number" id="admin_basketRate" value="${backend.basketRate || 1500}"></div>
-      <div class="admin-group"><label>Chimney Rate (₹)</label><input type="number" id="admin_chimneyRate" value="${backend.chimneyRate || 8500}"></div>
-      <div class="admin-group"><label>Built-in Hob Rate (₹)</label><input type="number" id="admin_hobRate" value="${backend.hobRate || 11000}"></div>
-    `;
-  }
-
-  function addNewMaterial() {
-    let cat = document.getElementById('newMatCategory').value;
-    let name = document.getElementById('newMatName').value.trim();
-    let rate = parseFloat(document.getElementById('newMatRate').value);
-
-    if (!name || isNaN(rate) || rate <= 0) {
-      alert("Sahi naam aur rate enter karein!");
-      return;
+    // Fill inner background
+    ctx.fillStyle = '#1e1e1e';
+    ctx.fillRect(x, y, w, h);
+    
+    // Draw Shelves (Horizontal lines inside)
+    ctx.strokeStyle = '#888';
+    ctx.lineWidth = 2;
+    const shelfSpacing = h / (numShelves + 1);
+    for (let i = 1; i <= numShelves; i++) {
+        let sy = y + (shelfSpacing * i);
+        ctx.beginPath();
+        ctx.moveTo(x, sy);
+        ctx.lineTo(x + w, sy);
+        ctx.stroke();
     }
-
-    backend[cat][name] = rate;
-    document.getElementById('newMatName').value = '';
-    document.getElementById('newMatRate').value = '';
-    renderAdminForm();
-    alert("New option added successfully!");
-  }
-
-  function deleteMaterial(cat, key) {
-    if (Object.keys(backend[cat]).length <= 1) {
-      alert("Kam se kam ek option rehna zaroori hai!");
-      return;
+    
+    // Draw Doors / Shutters (Vertical split lines)
+    ctx.strokeStyle = '#d4af37';
+    ctx.lineWidth = 1.5;
+    const doorWidth = w / numDoors;
+    for (let d = 1; d < numDoors; d++) {
+        let dx = x + (doorWidth * d);
+        ctx.beginPath();
+        ctx.moveTo(dx, y);
+        ctx.lineTo(dx, y + h);
+        ctx.stroke();
     }
-    if (confirm(`Aap kya sach mein "${key}" ko delete karna chahte hain?`)) {
-      delete backend[cat][key];
-      renderAdminForm();
-    }
-  }
+    
+    // Draw Dimension Labels
+    ctx.fillStyle = '#fff';
+    ctx.font = '12px Arial';
+    ctx.fillText(`Width: ${widthVal} ft`, x + w / 3, y - 10);
+    ctx.fillText(`Height: ${heightVal} ft`, x - 45, y + h / 2);
+}
 
-  function saveRates() {
-    let categories = ['carcass', 'doors', 'mica', 'linerMica', 'backing'];
-    categories.forEach(cat => {
-      for (let k in backend[cat]) {
-        let inputEl = document.getElementById(`rate_${cat}_${k}`);
-        if (inputEl) {
-          let val = parseFloat(inputEl.value);
-          if (!isNaN(val) && val > 0) {
-            backend[cat][k] = val;
-          }
-        }
-      }
-    });
-
-    backend.labourRate = parseFloat(document.getElementById('admin_labourRate').value) || 300;
-    backend.hingeRate = parseFloat(document.getElementById('admin_hingeRate').value) || 250;
-    backend.lockRate = parseFloat(document.getElementById('admin_lockRate').value) || 300;
-    backend.fevicolRate = parseFloat(document.getElementById('admin_fevicolRate').value) || 600;
-    backend.heatxRate = parseFloat(document.getElementById('admin_heatxRate').value) || 600;
-    backend.basketRate = parseFloat(document.getElementById('admin_basketRate').value) || 1500;
-    backend.chimneyRate = parseFloat(document.getElementById('admin_chimneyRate').value) || 8500;
-    backend.hobRate = parseFloat(document.getElementById('admin_hobRate').value) || 11000;
-
-    let newPin = document.getElementById('newPinCode').value.trim();
-    if (newPin) {
-      backend.adminPin = newPin;
-      document.getElementById('newPinCode').value = '';
-      alert("Admin PIN successfully updated!");
-    }
-
-    localStorage.setItem('cupboard_v18_backend', JSON.stringify(backend));
-    populateDropdowns();
-    closeAdmin();
-    alert("All rates updated and saved successfully!");
-  }
-
-  window.onload = function() {
-    populateDropdowns();
-    toggleKitchenOptions();
-    adjustDefaultsForType();
-  };
+// Initial draw on load
+window.onload = drawBlueprint;
 </script>
+
 </body>
 </html>
