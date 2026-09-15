@@ -6,11 +6,11 @@
     <title>Golden Star Furniture & Interior - Estimator</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #1a1a1a;
             color: #f4f4f4;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
         }
         .container {
             max-width: 600px;
@@ -18,10 +18,26 @@
             background: #2b2b2b;
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
         }
-        h2, h3 {
+        .header {
+            background: #fff;
+            color: #333;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-left: 6px solid #d4af37;
+        }
+        .header h2 { margin: 0; color: #b8860b; font-size: 22px; }
+        .header p { margin: 5px 0 0 0; font-size: 13px; color: #555; }
+        
+        h3 {
             color: #d4af37;
+            font-size: 16px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+            margin-top: 0;
         }
         .section {
             margin-bottom: 20px;
@@ -32,19 +48,20 @@
         label {
             display: block;
             margin-bottom: 5px;
-            font-size: 14px;
+            font-size: 13px;
             color: #ccc;
         }
         input, select {
             width: 100%;
             padding: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             background: #222;
             border: 1px solid #444;
             color: #fff;
             border-radius: 6px;
+            box-sizing: border-box;
         }
-        /* Blueprint Canvas Box Styling */
+        /* Blueprint Canvas Box */
         .blueprint-box {
             background: #111;
             border: 2px dashed #d4af37;
@@ -56,45 +73,111 @@
         canvas {
             background: #000;
             border-radius: 6px;
-            width: 100%;
             max-width: 100%;
             height: auto;
+        }
+        .total-box {
+            background: #d4af37;
+            color: #111;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Golden Star Furniture & Interior</h2>
-    <p>📞 700668839 | Lalchowk, Srinagar</p>
+    <!-- Header -->
+    <div class="header">
+        <h2>Golden Star Furniture & Interior</h2>
+        <p>📍 Xchange Road Lalchowk, Near Aadhar Center | 📞 700668839</p>
+    </div>
+
+    <!-- Select Project Type -->
+    <div class="section">
+        <h3>Select Project Type</h3>
+        <label>Cabinet / Design Type</label>
+        <select id="projectType">
+            <option>Standard Wardrobe (Full Height Cupboard)</option>
+            <option>Modular Kitchen Cabinets</option>
+            <option>TV Entertainment Unit</option>
+        </select>
+    </div>
 
     <!-- 1. Outer Dimensions -->
     <div class="section">
         <h3>1. Outer Dimensions</h3>
         <label>Height (ft)</label>
-        <input type="number" id="height" value="6" oninput="drawBlueprint()">
+        <input type="number" id="height" value="6" oninput="updateAll()">
         
         <label>Width (ft)</label>
-        <input type="number" id="width" value="4" oninput="drawBlueprint()">
+        <input type="number" id="width" value="4" oninput="updateAll()">
         
         <label>Depth (ft)</label>
-        <input type="number" id="depth" value="1.5" oninput="drawBlueprint()">
+        <input type="number" id="depth" value="1.5" oninput="updateAll()">
     </div>
 
-    <!-- 2. Doors & Shelves -->
+    <!-- 2. Doors, Partitions & Shelves -->
     <div class="section">
         <h3>2. Doors, Partitions & Shelves</h3>
         <label>Number of Doors</label>
-        <input type="number" id="doors" value="4" oninput="drawBlueprint()">
+        <input type="number" id="doors" value="4" oninput="updateAll()">
+        
+        <label>Center Partitions</label>
+        <input type="number" id="partitions" value="1" oninput="updateAll()">
         
         <label>Number of Shelves</label>
-        <input type="number" id="shelves" value="3" oninput="drawBlueprint()">
+        <input type="number" id="shelves" value="3" oninput="updateAll()">
 
-        <!-- Live Design Blueprint Preview Box -->
+        <!-- Live Blueprint Preview Box -->
         <div class="blueprint-box">
-            <h4 style="color: #d4af37; margin: 5px 0 10px 0;">Live Design Blueprint Preview</h4>
-            <canvas id="wardrobeCanvas" width="400" height="350"></canvas>
+            <h4 style="color: #d4af37; margin: 5px 0 10px 0; font-size: 14px;">Live Design Blueprint Preview</h4>
+            <canvas id="wardrobeCanvas" width="360" height="280"></canvas>
         </div>
+    </div>
+
+    <!-- 3. Materials & Mica -->
+    <div class="section">
+        <h3>3. Materials, Outer & Liner Mica</h3>
+        <label>Inner Structure / Carcass (18mm)</label>
+        <select id="carcass">
+            <option value="65">18mm Commercial Ply (₹65/sq.ft)</option>
+            <option value="85">18mm BWR Waterproof Ply (₹85/sq.ft)</option>
+        </select>
+
+        <label>Doors / Shutters Board</label>
+        <select id="shutter">
+            <option value="75">19mm Pine Blockboard (₹75/sq.ft)</option>
+            <option value="90">19mm Waterproof Blockboard (₹90/sq.ft)</option>
+        </select>
+
+        <label>Outer Mica Finish</label>
+        <select id="outerMica">
+            <option value="32">Matte Finish 0.8mm (₹32/sq.ft)</option>
+            <option value="55">High Gloss Finish (₹55/sq.ft)</option>
+        </select>
+    </div>
+
+    <!-- 4. Hardware Details -->
+    <div class="section">
+        <h3>4. Hardware & Adhesives Details</h3>
+        <label>Hinges / Kabze (Auto-calculated)</label>
+        <input type="number" id="hinges" value="12" readonly>
+        
+        <label>Locks Needed (Pcs)</label>
+        <input type="number" id="locks" value="1">
+        
+        <label>Drawers Needed (Pcs)</label>
+        <input type="number" id="drawers" value="3" oninput="updateAll()">
+    </div>
+
+    <!-- Estimated Cost Summary Box -->
+    <div class="total-box" id="totalBox">
+        Estimated Cost: ₹Calculating...
     </div>
 </div>
 
@@ -103,30 +186,27 @@ function drawBlueprint() {
     const canvas = document.getElementById('wardrobeCanvas');
     const ctx = canvas.getContext('2d');
     
-    // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Get values
-    const heightVal = parseFloat(document.getElementById('height').value) || 6;
-    const widthVal = parseFloat(document.getElementById('width').value) || 4;
+    const hVal = parseFloat(document.getElementById('height').value) || 6;
+    const wVal = parseFloat(document.getElementById('width').value) || 4;
     const numDoors = parseInt(document.getElementById('doors').value) || 2;
     const numShelves = parseInt(document.getElementById('shelves').value) || 3;
     
-    // Wardrobe Outer Box Frame
-    const x = 50, y = 30, w = 300, h = 280;
+    // Blueprint coordinates
+    const x = 40, y = 30, w = 280, h = 200;
     
-    // Draw Outer Carcass
+    // Outer Frame
     ctx.strokeStyle = '#d4af37';
-    ctx.lineWidth = 4;
+    ctx.lineWidth = 3;
     ctx.strokeRect(x, y, w, h);
     
-    // Fill inner background
-    ctx.fillStyle = '#1e1e1e';
+    ctx.fillStyle = '#181818';
     ctx.fillRect(x, y, w, h);
     
-    // Draw Shelves (Horizontal lines inside)
+    // Internal Shelves
     ctx.strokeStyle = '#888';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 1.5;
     const shelfSpacing = h / (numShelves + 1);
     for (let i = 1; i <= numShelves; i++) {
         let sy = y + (shelfSpacing * i);
@@ -136,9 +216,9 @@ function drawBlueprint() {
         ctx.stroke();
     }
     
-    // Draw Doors / Shutters (Vertical split lines)
+    // Door Shutters split
     ctx.strokeStyle = '#d4af37';
-    ctx.lineWidth = 1.5;
+    ctx.lineWidth = 1;
     const doorWidth = w / numDoors;
     for (let d = 1; d < numDoors; d++) {
         let dx = x + (doorWidth * d);
@@ -148,15 +228,35 @@ function drawBlueprint() {
         ctx.stroke();
     }
     
-    // Draw Dimension Labels
+    // Labels on Canvas
     ctx.fillStyle = '#fff';
-    ctx.font = '12px Arial';
-    ctx.fillText(`Width: ${widthVal} ft`, x + w / 3, y - 10);
-    ctx.fillText(`Height: ${heightVal} ft`, x - 45, y + h / 2);
+    ctx.font = '11px Arial';
+    ctx.fillText(`Width: ${wVal} ft`, x + w / 3, y - 10);
+    ctx.fillText(`Height: ${hVal} ft`, x - 38, y + h / 2);
 }
 
-// Initial draw on load
-window.onload = drawBlueprint;
+function updateAll() {
+    // Auto-calculate hinges based on doors (approx 3 hinges per door)
+    const doors = parseInt(document.getElementById('doors').value) || 2;
+    document.getElementById('hinges').value = doors * 3;
+    
+    // Approximate total cost calculation logic
+    const height = parseFloat(document.getElementById('height').value) || 6;
+    const width = parseFloat(document.getElementById('width').value) || 4;
+    const sqft = height * width;
+    
+    const carcassRate = parseFloat(document.getElementById('carcass').value) || 65;
+    const shutterRate = parseFloat(document.getElementById('shutter').value) || 75;
+    const micaRate = parseFloat(document.getElementById('outerMica').value) || 32;
+    
+    const estimatedTotal = sqft * (carcassRate + shutterRate + micaRate + 40); // 40 for labor/misc
+    document.getElementById('totalBox').innerHTML = `Estimated Cost: ₹${Math.round(estimatedTotal).toLocaleString('en-IN')}`;
+    
+    // Redraw canvas
+    drawBlueprint();
+}
+
+window.onload = updateAll;
 </script>
 
 </body>
